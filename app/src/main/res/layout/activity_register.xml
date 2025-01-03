@@ -98,7 +98,7 @@
         app:layout_constraintTop_toTopOf="@+id/view3" />
 
     <EditText
-        android:id="@+id/login_password"
+        android:id="@+id/register_password"
         android:layout_width="317dp"
         android:layout_height="37dp"
         android:layout_marginTop="56dp"
