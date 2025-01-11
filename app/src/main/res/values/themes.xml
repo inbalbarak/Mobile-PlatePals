@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.PlatePals" parent="Theme.AppCompat.Light.NoActionBar" />
+
 </resources>
