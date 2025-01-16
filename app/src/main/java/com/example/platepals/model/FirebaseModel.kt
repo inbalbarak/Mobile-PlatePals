@@ -1,5 +1,6 @@
 package com.example.platepals.model
 import com.example.platepals.base.Constants
+import com.example.platepals.base.CreatePostCallback
 import com.example.platepals.base.EmptyCallback
 import com.example.platepals.base.PostCallback
 import com.example.platepals.base.TagsCallback
@@ -33,28 +34,36 @@ class FirebaseModel {
             }
     }
 
-    fun addPost(post: Post, callback: EmptyCallback) {
-        database.collection(Constants.COLLECTIONS.POSTS).document()
-            .set(post.json)
-            .addOnCompleteListener {
-                callback()
-            }
+    fun addPost(post: Post, update: Boolean, callback: CreatePostCallback) {
+        if(update){
+            database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",post.id).get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        document.reference.update(post.json).addOnSuccessListener{
+                            callback(true)
+                        }
+                    }
+                }
+        }else{
+            database.collection(Constants.COLLECTIONS.POSTS).document()
+                .set(post.json)
+                .addOnCompleteListener {
+                    callback(true)
+                }
+        }
     }
 
     fun getPostById(postId: String, callback: PostCallback) {
-        database.collection(Constants.COLLECTIONS.POSTS).document(postId).get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val document = task.result
-                    if (document != null && document.exists()) {
-                        val post = Post.fromJSON(document.data ?: mapOf())
-                        callback(post)
-                    } else {
-                        callback(null)
-                    }
-                } else {
-                    callback(null)
+        database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",postId).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val post :Post = Post.fromJSON(document.data ?: mapOf())
+                    callback(post)
+
                 }
             }
+//            .addOnFailureListener { exception ->
+//                Log.w(TAG, "Error getting documents: ", exception)
+//            }
     }
 }

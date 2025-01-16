@@ -2,18 +2,18 @@ package com.example.platepals.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
+import java.util.*
 
 @Entity
 data class Post(
-    @PrimaryKey val id: String,
-    val title:String,
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val title: String,
     val author: String,
-    val tags: Array<String>,
-    val rating: Number,
-    val ingredients:String,
-    val instructions:String,
-    val createdAt: Date
+    val tags: List<String>,
+    val rating: Number? = null,
+    val ingredients: String,
+    val instructions: String,
+    val createdAt: Date = Date()
 ) {
     companion object {
         private const val ID_KEY = "id"
@@ -26,11 +26,11 @@ data class Post(
         private const val CREATED_AT_KEY = "createdAt"
 
         fun fromJSON(json: Map<String, Any>): Post {
-            val id = json[ID_KEY] as? String ?: ""
+            val id = json[ID_KEY] as? String ?: UUID.randomUUID().toString()
             val title = json[TITLE_KEY] as? String ?: ""
             val author = json[AUTHOR_KEY] as? String ?: ""
-            val tags = (json[TAGS_KEY] as? List<*>)?.filterIsInstance<String>()?.toTypedArray() ?: emptyArray()
-            val rating = json[RATING_KEY] as? Number ?: 0
+            val tags = (json[TAGS_KEY] as? List<*>)?.filterIsInstance<String>() ?: emptyList()  // Change Array to List
+            val rating = json[RATING_KEY] as? Number? // Rating is nullable
             val ingredients = json[INGREDIENTS_KEY] as? String ?: ""
             val instructions = json[INSTRUCTIONS_KEY] as? String ?: ""
             val createdAt = json[CREATED_AT_KEY] as? Date ?: Date()
@@ -38,15 +38,16 @@ data class Post(
             return Post(
                 id = id,
                 title = title,
-                author=author,
-                tags=tags,
-                rating=rating,
-                ingredients=ingredients,
-                instructions=instructions,
-                createdAt=createdAt
+                author = author,
+                tags = tags,
+                rating = rating,
+                ingredients = ingredients,
+                instructions = instructions,
+                createdAt = createdAt
             )
         }
     }
+
     val json: Map<String, Any>
         get() {
             return hashMapOf(
@@ -54,11 +55,11 @@ data class Post(
                 TITLE_KEY to title,
                 AUTHOR_KEY to author,
                 TAGS_KEY to tags,
-                RATING_KEY to rating,
+                RATING_KEY to (rating ?: 0),
                 INGREDIENTS_KEY to ingredients,
                 INSTRUCTIONS_KEY to instructions,
                 CREATED_AT_KEY to createdAt
             )
-
         }
+
 }

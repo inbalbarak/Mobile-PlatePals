@@ -1,6 +1,6 @@
 package com.example.platepals.model
 
-import com.example.platepals.base.EmptyCallback
+import com.example.platepals.base.CreatePostCallback
 import com.example.platepals.base.PostCallback
 import com.example.platepals.base.TagsCallback
 
@@ -11,8 +11,8 @@ class Model private constructor() {
         val shared = Model()
     }
 
-    fun addPost(post: Post, callback: EmptyCallback) {
-        firebaseModel.addPost(post,callback)
+    fun addPost(post: Post, update: Boolean, callback: CreatePostCallback) {
+        firebaseModel.addPost(post,update,callback)
     }
 
     fun getAllTags(callback: TagsCallback) {
