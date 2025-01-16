@@ -1,30 +1,27 @@
-package com.idz.colman24class2.model
+package com.example.platepals.model
 
-import android.os.Looper
-import androidx.core.os.HandlerCompat
-import com.example.platepals.model.User
-import com.example.platepals.model.dao.AppLocalDb
-import com.example.platepals.model.dao.AppLocalDbRepository
-import java.util.concurrent.Executors
-
-typealias EmptyCallback = () -> Unit
+import com.example.platepals.base.EmptyCallback
+import com.example.platepals.base.PostCallback
+import com.example.platepals.base.TagsCallback
 
 class Model private constructor() {
-    private val database: AppLocalDbRepository = AppLocalDb.database
-    private val executor = Executors.newSingleThreadExecutor()
-    private val mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
+    private val firebaseModel = FirebaseModel()
 
     companion object {
         val shared = Model()
     }
 
-    fun add(user: User, callback: EmptyCallback) {
-        executor.execute {
-            database.UserDao().create(user)
-            mainHandler.post {
-                callback()
-            }
-        }
+    fun addPost(post: Post, callback: EmptyCallback) {
+        firebaseModel.addPost(post,callback)
+    }
+
+    fun getAllTags(callback: TagsCallback) {
+        firebaseModel.getAllTags(callback)
+    }
+
+
+    fun getPostById(id: String, callback: PostCallback) {
+        firebaseModel.getPostById(id,callback)
     }
 
 }

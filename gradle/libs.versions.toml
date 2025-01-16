@@ -13,6 +13,8 @@ googleServices = "4.4.2"
 appcompat = "1.7.0"
 constraintlayout = "2.1.4"
 roomRuntimeVersion = "2.6.1"
+material = "1.12.0"
+activity = "1.9.3"
 
 
 [libraries]
@@ -37,6 +39,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntimeVersion" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntimeVersion" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntimeVersion" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 
 [plugins]
