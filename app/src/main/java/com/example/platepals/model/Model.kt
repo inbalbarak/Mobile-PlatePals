@@ -1,8 +1,9 @@
 package com.example.platepals.model
 
-import com.example.platepals.base.CreatePostCallback
+import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.PostCallback
 import com.example.platepals.base.TagsCallback
+import com.example.platepals.base.UserCallback
 
 class Model private constructor() {
     private val firebaseModel = FirebaseModel()
@@ -11,7 +12,7 @@ class Model private constructor() {
         val shared = Model()
     }
 
-    fun addPost(post: Post, update: Boolean, callback: CreatePostCallback) {
+    fun addPost(post: Post, update: Boolean, callback: BooleanCallback) {
         firebaseModel.addPost(post,update,callback)
     }
 
@@ -22,6 +23,14 @@ class Model private constructor() {
 
     fun getPostById(id: String, callback: PostCallback) {
         firebaseModel.getPostById(id,callback)
+    }
+
+    fun getUserByEmail(email: String, callback: UserCallback) {
+        firebaseModel.getUserById(email,callback)
+    }
+
+    fun upsertUser(user: User, update: Boolean, callback: BooleanCallback) {
+        firebaseModel.upsertUser(user,update, callback)
     }
 
 }

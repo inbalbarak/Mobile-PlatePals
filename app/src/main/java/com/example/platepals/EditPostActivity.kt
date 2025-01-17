@@ -15,6 +15,8 @@ import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast
 import com.example.platepals.model.Post
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import java.util.UUID
 
 
@@ -82,27 +84,33 @@ class EditPostActivity : AppCompatActivity() {
         ingredientsText: EditText,
         instructionsText: EditText
     ) {
+        val currentUser = Firebase.auth.currentUser
+
         val recipeName = recipeNameText.text.toString()
         val ingredients = ingredientsText.text.toString()
         val instructions = instructionsText.text.toString()
 
-        val newPost = Post(
-            id = postId ?: UUID.randomUUID().toString(),
-            title = recipeName,
-            author="// TODO add username from login",
-            ingredients = ingredients,
-            instructions = instructions,
-            tags = selectedTagIds.toList(),
-        )
+        if(!(currentUser?.email ?: "").isEmpty()){
+            val newPost = Post(
+                id = postId ?: UUID.randomUUID().toString(),
+                title = recipeName,
+                author=currentUser?.email ?:"",
+                ingredients = ingredients,
+                instructions = instructions,
+                tags = selectedTagIds.toList(),
+            )
 
-        Model.shared.addPost(newPost, postId !== null) { success ->
-            if (success) {
-                Toast.makeText(this, "Post saved successfully", Toast.LENGTH_SHORT).show()
+            Model.shared.addPost(newPost, postId !== null) { success ->
+                if (success) {
+                    Toast.makeText(this, "Post saved successfully", Toast.LENGTH_SHORT).show()
 
-                //TODO navigate to home
-            } else {
-                Toast.makeText(this, "Error saving post", Toast.LENGTH_SHORT).show()
+                    //TODO navigate to home
+                } else {
+                    Toast.makeText(this, "Error saving post", Toast.LENGTH_SHORT).show()
+                }
             }
+        }else{
+            Toast.makeText(this, "Error saving post, try logging in again", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -2,11 +2,13 @@ package com.example.platepals.base
 
 import com.example.platepals.model.Post
 import com.example.platepals.model.Tag
+import com.example.platepals.model.User
 
 typealias TagsCallback = (List<Tag>) -> Unit
 typealias EmptyCallback = () -> Unit
 typealias PostCallback = (Post?) -> Unit
-typealias CreatePostCallback = (Boolean) -> Unit
+typealias BooleanCallback = (Boolean) -> Unit
+typealias UserCallback = (User?)-> Unit
 
 object Constants {
     object COLLECTIONS {
