@@ -74,9 +74,9 @@ class FirebaseModel {
             }
     }
 
-    fun upsertUser(user: User, update: Boolean, callback: BooleanCallback) {
-        if(update){
-            database.collection(Constants.COLLECTIONS.USERS).whereEqualTo("email",user.email).get()
+    fun upsertUser(user: User, originalEmail:String?, callback: BooleanCallback) {
+        if(originalEmail !== null){
+            database.collection(Constants.COLLECTIONS.USERS).whereEqualTo("email",originalEmail).get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
                         document.reference.update(user.json).addOnSuccessListener{

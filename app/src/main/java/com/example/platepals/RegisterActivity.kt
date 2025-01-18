@@ -28,7 +28,7 @@ class RegisterActivity : AppCompatActivity() {
             val password = findViewById<EditText>(R.id.register_password).text.toString()
 
             if(email.isNotEmpty() && password.isNotEmpty()){
-                Model.shared.upsertUser(User(email,password), false) { success ->
+                Model.shared.upsertUser(User(email,password), null) { success ->
                     if(success){
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(this){task->

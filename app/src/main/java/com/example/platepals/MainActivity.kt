@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         .addOnCompleteListener(this){task->
                             if(task.isSuccessful){
                                 Toast.makeText(this,"authentication finished successfully", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, EditPostActivity::class.java)
+                                val intent = Intent(this, PersonalInfoActivity::class.java)
                                 startActivity(intent)
                                 //TODO move to home page
                             }else{
