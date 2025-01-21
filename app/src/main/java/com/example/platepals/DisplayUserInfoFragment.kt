@@ -16,21 +16,22 @@ class DisplayUserInfoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_display_user_info, container, false)
 
-        val email = arguments?.getString(EMAIL)
+        val username = arguments?.getString(USERNAME)
         val rating = arguments?.getInt(RATING)
         val avatarUrl = arguments?.getString(AVATAR_URL)
 
         val ratingTextView = view.findViewById<TextView>(R.id.ratingText)
-        val emailTextView = view.findViewById<TextView>(R.id.emailText)
+        val usernameTextView = view.findViewById<TextView>(R.id.usernameText)
         val avatar: ImageView = view.findViewById(R.id.avatarImage)
 
         ratingTextView.text = rating?.toString() ?: "0"
-        emailTextView.text = email
+        usernameTextView.text = username
+
         // TODO: Set avatar image
 
         val editButton: Button = view.findViewById(R.id.editProfile)
         editButton.setOnClickListener {
-            val editFragment = EditUserInfoFragment.newInstance(email ?: "", avatarUrl ?: "")
+            val editFragment = EditUserInfoFragment.newInstance(username ?: "", avatarUrl ?: "")
             (activity as? PersonalInfoActivity)?.showFragment(editFragment)
         }
 
@@ -38,14 +39,14 @@ class DisplayUserInfoFragment : Fragment() {
     }
 
     companion object {
-        private const val EMAIL = "email"
+        private const val USERNAME = "username"
         private const val RATING = "rating"
         private const val AVATAR_URL = "avatarUrl"
 
-        fun newInstance(email: String, rating: Int, avatarUrl: String): DisplayUserInfoFragment {
+        fun newInstance(username: String, rating: Int, avatarUrl: String): DisplayUserInfoFragment {
             val fragment = DisplayUserInfoFragment()
             val args = Bundle()
-            args.putString(EMAIL, email)
+            args.putString(USERNAME, username)
             args.putInt(RATING, rating)
             args.putString(AVATAR_URL, avatarUrl)
             fragment.arguments = args

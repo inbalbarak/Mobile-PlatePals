@@ -41,7 +41,7 @@ class PersonalInfoActivity : AppCompatActivity() {
 
             val rating = if(user?.ratingCount?.toInt() == 0)  0 else (user?.ratingSum?.toInt() ?: 1) / (user?.ratingCount?.toInt() ?: 1)
 
-            val displayFragment = DisplayUserInfoFragment.newInstance(user?.email ?: "", rating, user?.avatarUrl ?: "")
+            val displayFragment = DisplayUserInfoFragment.newInstance(user?.username ?: "", rating, user?.avatarUrl ?: "")
             showFragment(displayFragment)
         }
 

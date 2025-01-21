@@ -63,9 +63,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="Username"
+        android:text="Email"
         android:textColor="#000"
-        app:layout_constraintBottom_toTopOf="@+id/register_username"
+        app:layout_constraintBottom_toTopOf="@+id/register_email"
         app:layout_constraintStart_toStartOf="@+id/view3"
         app:layout_constraintTop_toTopOf="@+id/view3"
         app:layout_constraintVertical_bias="0.44" />
@@ -80,16 +80,16 @@
         android:text="Password"
         android:textColor="#000"
         app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/register_username" />
+        app:layout_constraintTop_toBottomOf="@+id/register_email" />
 
     <EditText
-        android:id="@+id/register_username"
+        android:id="@+id/register_email"
         android:layout_width="317dp"
         android:layout_height="37dp"
         android:layout_marginTop="44dp"
         android:background="@drawable/rounded_edit_text"
         android:ems="10"
-        android:hint="Enter your username"
+        android:hint="Enter your email"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintHorizontal_bias="0.456"
@@ -107,6 +107,6 @@
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/register_username" />
+        app:layout_constraintTop_toBottomOf="@+id/register_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

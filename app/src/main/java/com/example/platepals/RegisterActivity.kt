@@ -24,11 +24,11 @@ class RegisterActivity : AppCompatActivity() {
         val registerButton : Button = findViewById(R.id.register_btn)
         registerButton.setOnClickListener {
             val auth = Firebase.auth
-            val email = findViewById<EditText>(R.id.register_username).text.toString()
+            val email = findViewById<EditText>(R.id.register_email).text.toString()
             val password = findViewById<EditText>(R.id.register_password).text.toString()
 
             if(email.isNotEmpty() && password.isNotEmpty()){
-                Model.shared.upsertUser(User(email,password), null) { success ->
+                Model.shared.upsertUser(User(email,password)) { success ->
                     if(success){
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(this){task->
