@@ -79,7 +79,9 @@ class FirebaseModel {
             .addOnSuccessListener { documents ->
                 if(documents.size() == 0){
                     database.collection(Constants.COLLECTIONS.USERS).document()
-                        .set(user.json)
+                        .set(user.json).addOnSuccessListener{
+                            callback(true)
+                        }
                 }else{
                     for (document in documents) {
                         document.reference.update(user.json).addOnSuccessListener{

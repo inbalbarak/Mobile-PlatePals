@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
         val loginButton: Button = findViewById(R.id.login_btn);
         val registerButton : TextView = findViewById(R.id.open_register_btn)
         val auth = Firebase.auth
+
         if(auth.currentUser?.email != null){
             login(true,auth.currentUser?.email?:"")
         }
