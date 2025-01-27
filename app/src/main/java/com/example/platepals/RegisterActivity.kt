@@ -33,10 +33,9 @@ class RegisterActivity : AppCompatActivity() {
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(this){task->
                                 if(task.isSuccessful){
-                                    val intent = Intent(this, EditPostActivity::class.java)
+                                    val intent = Intent(this, HomeActivity::class.java)
                                     startActivity(intent)
-                                    //TODO move to home page
-                                }else{
+                                } else{
                                     Toast.makeText(this,"authentication failed", Toast.LENGTH_SHORT).show()
                                 }
                             }

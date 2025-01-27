@@ -6,6 +6,7 @@ import com.example.platepals.model.User
 
 typealias TagsCallback = (List<Tag>) -> Unit
 typealias EmptyCallback = () -> Unit
+typealias PostsCallback = (List<Post>) -> Unit
 typealias PostCallback = (Post?) -> Unit
 typealias BooleanCallback = (Boolean) -> Unit
 typealias UserCallback = (User?)-> Unit

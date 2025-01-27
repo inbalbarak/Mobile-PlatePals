@@ -2,6 +2,7 @@ package com.example.platepals.model
 
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.PostCallback
+import com.example.platepals.base.PostsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 
@@ -20,6 +21,9 @@ class Model private constructor() {
         firebaseModel.getAllTags(callback)
     }
 
+    fun getAllPosts(callback: PostsCallback) {
+        firebaseModel.getAllPosts(callback)
+    }
 
     fun getPostById(id: String, callback: PostCallback) {
         firebaseModel.getPostById(id,callback)

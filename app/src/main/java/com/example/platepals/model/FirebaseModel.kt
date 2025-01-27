@@ -2,6 +2,7 @@ package com.example.platepals.model
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
+import com.example.platepals.base.PostsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.google.firebase.Firebase
@@ -51,6 +52,22 @@ class FirebaseModel {
                     callback(true)
                 }
         }
+    }
+
+    fun getAllPosts(callback: PostsCallback) {
+        database.collection(Constants.COLLECTIONS.POSTS).get()
+            .addOnCompleteListener {
+                when (it.isSuccessful) {
+                    true -> {
+                        val posts: MutableList<Post> = mutableListOf()
+                        for (json in it.result) {
+                            posts.add(Post.fromJSON(json.data))
+                        }
+                        callback(posts)
+                    }
+                    false -> callback(listOf())
+                }
+            }
     }
 
     fun getPostById(postId: String, callback: PostCallback) {

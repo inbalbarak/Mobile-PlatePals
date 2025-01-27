@@ -9,6 +9,7 @@ data class Post(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val title: String,
     val author: String,
+    val imageUrl: String,
     val tags: List<String>,
     val rating: Number? = null,
     val ratingSum:Number?= 0,
@@ -21,6 +22,7 @@ data class Post(
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"
         private const val AUTHOR_KEY = "author"
+        private const val IMAGE_URL_KEY = "imageUrl"
         private const val TAGS_KEY = "tags"
         private const val RATING_SUM_KEY = "ratingSum"
         private const val RATING_COUNT_KEY = "ratingCount"
@@ -28,10 +30,12 @@ data class Post(
         private const val INSTRUCTIONS_KEY = "instructions"
         private const val CREATED_AT_KEY = "createdAt"
 
+
         fun fromJSON(json: Map<String, Any>): Post {
             val id = json[ID_KEY] as? String ?: UUID.randomUUID().toString()
             val title = json[TITLE_KEY] as? String ?: ""
             val author = json[AUTHOR_KEY] as? String ?: ""
+            val imageUrl = json[IMAGE_URL_KEY] as? String ?: ""
             val tags = (json[TAGS_KEY] as? List<*>)?.filterIsInstance<String>() ?: emptyList()  // Change Array to List
             val ratingSum = json[RATING_SUM_KEY] as? Number?: 0
             val ratingCount = json[RATING_COUNT_KEY] as? Number?: 0
@@ -43,6 +47,7 @@ data class Post(
                 id = id,
                 title = title,
                 author = author,
+                imageUrl = imageUrl,
                 tags = tags,
                 ratingSum = ratingSum,
                 ratingCount = ratingCount,
@@ -59,6 +64,7 @@ data class Post(
                 ID_KEY to id,
                 TITLE_KEY to title,
                 AUTHOR_KEY to author,
+                IMAGE_URL_KEY to imageUrl,
                 TAGS_KEY to tags,
                 RATING_SUM_KEY to (ratingSum ?: 0),
                 RATING_COUNT_KEY to (ratingCount ?: 0),
