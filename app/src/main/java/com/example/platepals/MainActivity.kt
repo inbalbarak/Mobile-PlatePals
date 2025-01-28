@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         }
 
         loginButton.setOnClickListener {
-            val email = findViewById<EditText>(R.id.login_username).text.toString()
+            val email = findViewById<EditText>(R.id.login_email).text.toString()
             val password = findViewById<EditText>(R.id.login_password).text.toString()
 
             login(false,email,password)
