@@ -48,6 +48,6 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="#D3D3D3"/>
+        android:background="#C1C1C1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
