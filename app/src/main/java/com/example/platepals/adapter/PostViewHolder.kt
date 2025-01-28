@@ -1,3 +1,6 @@
+package com.example.platepals.adapter
+
+import OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.platepals.databinding.PostListRowBinding
 import com.example.platepals.model.Post

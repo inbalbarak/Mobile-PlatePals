@@ -97,6 +97,7 @@ class EditPostActivity : AppCompatActivity() {
                 author=currentUser?.email ?:"",
                 ingredients = ingredients,
                 instructions = instructions,
+                imageUrl = "", // TODO get uploaded photo
                 tags = selectedTagIds.toList(),
             )
 

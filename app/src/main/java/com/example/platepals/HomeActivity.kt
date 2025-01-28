@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.platepals.model.Model
+import com.example.platepals.model.Post
 
 class HomeActivity : AppCompatActivity() {
     private val selectedTagIds = mutableSetOf<String>()
@@ -30,21 +31,50 @@ class HomeActivity : AppCompatActivity() {
         }
 
         loadTags()
+        selectSort()
+        loadFilteredPosts()
 
         val topButton: Button = findViewById(R.id.topButton);
         val newButton: Button = findViewById(R.id.newButton);
 
-        selectSort()
-
         topButton.setOnClickListener {
             selectedSort = R.id.topButton
             selectSort()
+            loadFilteredPosts()
         }
 
         newButton.setOnClickListener {
             selectedSort = R.id.newButton
             selectSort()
+            loadFilteredPosts()
         }
+    }
+
+    private fun loadFilteredPosts() {
+        Model.shared.getAllPosts { allPosts ->
+            runOnUiThread {
+                var filteredPosts = allPosts.filter { post ->
+                    selectedTagIds.isEmpty() || post.tags.any { tag -> selectedTagIds.contains(tag) }
+                }
+
+                filteredPosts = if (selectedSort == R.id.newButton) {
+                    filteredPosts.sortedByDescending { it.createdAt }
+                } else {
+                    filteredPosts.sortedByDescending { it.rating }
+                }
+
+                Log.i("yahli", filteredPosts.toString());
+
+                showPostsFragment(filteredPosts)
+            }
+        }
+    }
+
+    private fun showPostsFragment(posts: List<Post>) {
+        val fragment = PostsListFragment.newInstance(posts)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment)
+            .commit()
     }
 
     private fun loadTags() {
@@ -100,6 +130,8 @@ class HomeActivity : AppCompatActivity() {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
             }
+
+            loadFilteredPosts()
         }
 
         return tagView

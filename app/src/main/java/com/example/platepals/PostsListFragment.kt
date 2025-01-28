@@ -1,5 +1,6 @@
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,10 +9,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.platepals.PostsListViewModel
+import com.example.platepals.adapter.PostsRecyclerAdapter
 import com.example.platepals.databinding.FragmentPostsListBinding
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
-import com.idz.colman24class2.adapter.PostsRecyclerAdapter
 
 interface OnItemClickListener {
     fun onItemClick(post: Post?)
@@ -22,10 +23,16 @@ class PostsListFragment : Fragment() {
     private var adapter: PostsRecyclerAdapter? = null
     private var binding: FragmentPostsListBinding? = null
     private var viewModel: PostsListViewModel? = null
+    private var posts: List<Post>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(this)[PostsListViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        posts = arguments?.getParcelableArrayList(ARG_POSTS)
     }
 
     override fun onCreateView(
@@ -40,7 +47,7 @@ class PostsListFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         binding?.recyclerView?.layoutManager = layoutManager
 
-        adapter = PostsRecyclerAdapter(viewModel?.posts)
+        adapter = PostsRecyclerAdapter(posts ?: emptyList())
 
         adapter?.listener = object : OnItemClickListener {
             override fun onItemClick(post: Post?) {
@@ -48,12 +55,9 @@ class PostsListFragment : Fragment() {
             }
         }
 
-        return binding?.root
-    }
+        binding?.recyclerView?.adapter = adapter
 
-    override fun onResume() {
-        super.onResume()
-        getAllPosts()
+        return binding?.root
     }
 
     override fun onDestroy() {
@@ -61,16 +65,15 @@ class PostsListFragment : Fragment() {
         binding = null
     }
 
-    private fun getAllPosts() {
+    companion object {
+        private const val ARG_POSTS = "posts"
 
-        binding?.progressBar?.visibility = View.VISIBLE
-
-        Model.shared.getAllPosts {
-            viewModel?.set(posts = it)
-            adapter?.set(it)
-            adapter?.notifyDataSetChanged()
-
-            binding?.progressBar?.visibility = View.GONE
+        fun newInstance(posts: List<Post>): PostsListFragment {
+            return PostsListFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(ARG_POSTS, ArrayList(posts) as ArrayList<out Parcelable>?)
+                }
+            }
         }
     }
 }

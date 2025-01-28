@@ -1,7 +1,6 @@
-package com.idz.colman24class2.adapter
+package com.example.platepals.adapter
 
 import OnItemClickListener
-import PostViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
