@@ -16,9 +16,6 @@
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".PersonalInfoActivity"
-            android:exported="false" />
-        <activity
             android:name=".EditPostActivity"
             android:exported="false" />
         <activity

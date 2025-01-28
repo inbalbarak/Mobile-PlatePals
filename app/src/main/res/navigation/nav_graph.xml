@@ -1,6 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<navigation xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/nav_graph"-->
+<!--    app:startDestination="@id/personalInfoFragment">-->
+
+<!--    &lt;!&ndash; Correctly specify the fragment class and layout &ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/personalInfoFragment"-->
+<!--        android:name="com.example.platepals.PersonalInfoFragment"-->
+<!--        android:label="Personal Info"-->
+<!--        tools:layout="@layout/fragment_personal_info">-->
+
+
+
+<!--        <action-->
+<!--            android:id="@+id/action_display_displayUserInfoFragment"-->
+<!--            app:destination="@id/displayUserInfoFragment">-->
+<!--            <argument-->
+<!--                android:name="username"-->
+<!--                app:argType="string" />-->
+<!--            <argument-->
+<!--                android:name="rating"-->
+<!--                app:argType="integer" />-->
+<!--            <argument-->
+<!--                android:name="avatarUrl"-->
+<!--                app:argType="string" />-->
+<!--        </action>-->
+<!--    </fragment>-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/displayUserInfoFragment"-->
+<!--        android:name="com.example.platepals.DisplayUserInfoFragment"-->
+<!--        android:label="Display User Info">-->
+<!--        <action-->
+<!--            android:id="@+id/action_displayUserInfoFragment_to_editUserInfoFragment"-->
+<!--            app:destination="@id/editUserInfoFragment">-->
+<!--            <argument-->
+<!--                android:name="username"-->
+<!--                app:argType="string" />-->
+<!--            <argument-->
+<!--                android:name="avatarUrl"-->
+<!--                app:argType="string" />-->
+<!--        </action>-->
+<!--    </fragment>-->
+
+<!--    &lt;!&ndash; EditUserInfoFragment &ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/editUserInfoFragment"-->
+<!--        android:name="com.example.platepals.EditUserInfoFragment"-->
+<!--        android:label="Edit User Info">-->
+<!--        <action-->
+<!--            android:id="@+id/action_editUserInfoFragment_to_displayUserInfoFragment"-->
+<!--            app:destination="@id/displayUserInfoFragment">-->
+<!--            <argument-->
+<!--                android:name="username"-->
+<!--                app:argType="string" />-->
+<!--            <argument-->
+<!--                android:name="rating"-->
+<!--                app:argType="integer" />-->
+<!--            <argument-->
+<!--                android:name="avatarUrl"-->
+<!--                app:argType="string" />-->
+<!--        </action>-->
+<!--    </fragment>-->
+<!--</navigation>-->
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/personalInfoFragment">
 
+    <fragment
+        android:id="@+id/personalInfoFragment"
+        android:name="com.example.platepals.PersonalInfoFragment"
+        android:label="Personal Info"
+        tools:layout="@layout/fragment_personal_info">
+        <!-- Define the action to navigate to DisplayUserInfoFragment -->
+        <action
+            android:id="@+id/action_personalInfoFragment_to_displayUserInfoFragment"
+            app:destination="@id/displayUserInfoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/displayUserInfoFragment"
+        android:name="com.example.platepals.DisplayUserInfoFragment"
+        android:label="Display User Info">
+        <action
+            android:id="@+id/action_displayUserInfoFragment_to_editUserInfoFragment"
+            app:destination="@id/editUserInfoFragment">
+            <argument
+                android:name="username"
+                app:argType="string" />
+            <argument
+                android:name="avatarUrl"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editUserInfoFragment"
+        android:name="com.example.platepals.EditUserInfoFragment"
+        android:label="Edit User Info" />
 </navigation>

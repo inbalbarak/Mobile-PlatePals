@@ -1,13 +1,11 @@
 package com.example.platepals
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.platepals.model.Model
@@ -42,13 +40,12 @@ class EditUserInfoFragment : Fragment() {
                 Model.shared.upsertUser(User(email, user?.password ?: "",updatedUsername.text.toString())) { success ->
                     if (success) {
                         val rating = if(user?.ratingCount?.toInt() == 0)  0 else (user?.ratingSum?.toInt() ?: 1) / (user?.ratingCount?.toInt() ?: 1)
+                        val displayFragment = DisplayUserInfoFragment.newInstance(username ?: "",rating, avatarUrl ?: "")
 
-                        val displayFragment = DisplayUserInfoFragment.newInstance(
-                            updatedUsername.text.toString(),
-                            rating,
-                            avatarUrl ?: ""
-                        )
-                        (activity as? PersonalInfoActivity)?.showFragment(displayFragment)
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView, displayFragment)
+                            .addToBackStack(null)
+                            .commit()
 
                     } else {
                         Toast.makeText(requireContext(), "Failed to update user info", Toast.LENGTH_SHORT).show()
