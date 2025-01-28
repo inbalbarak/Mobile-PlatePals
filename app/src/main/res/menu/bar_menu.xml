@@ -4,10 +4,10 @@
     <item
         android:id="@+id/personalInfoFragment"
         android:icon="@drawable/baseline_perm_identity_24"
-        android:title="Personal info" />
+        android:title="" />
 
     <item
         android:id="@+id/homeFragment"
-        android:icon="@drawable/home_icon"
-        android:title="Home" />
+        android:icon="@drawable/baseline_perm_identity_24"
+        android:title="" />
 </menu>
