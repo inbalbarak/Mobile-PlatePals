@@ -42,7 +42,7 @@
         app:itemIconTint="@color/bottom_nav_item_color"/>
 
     <View
-        android:id="@+id/view4"
+        android:id="@+id/navbar_divider"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_bar"
