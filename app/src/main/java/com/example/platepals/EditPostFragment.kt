@@ -1,46 +1,51 @@
 package com.example.platepals
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import com.example.platepals.model.Model
 import android.graphics.Color
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.EditText
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.helper.widget.Flow
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import com.example.platepals.model.Model
 import com.example.platepals.model.Post
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
 
-
-class EditPostActivity : AppCompatActivity() {
+class EditPostFragment : Fragment() {
     private var postId: String? = null
     private val selectedTagIds = mutableSetOf<String>()
     private val tagViews = mutableListOf<TextView>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_edit_post)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_edit_post, container, false)
+    }
 
-        postId = intent?.getStringExtra("postId") ?: null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        postId = arguments?.getString(POST_ID)
         postId?.let {
             getPostDetails(it)
         }
 
         loadTags()
 
-        val recipeNameText = findViewById<EditText>(R.id.recipeNameText)
-        val ingredientsText = findViewById<EditText>(R.id.ingredientsText)
-        val instructionsText = findViewById<EditText>(R.id.instructionsText)
-        val saveButton = findViewById<Button>(R.id.save)
+        val recipeNameText = view.findViewById<EditText>(R.id.recipeNameText)
+        val ingredientsText = view.findViewById<EditText>(R.id.ingredientsText)
+        val instructionsText = view.findViewById<EditText>(R.id.instructionsText)
+        val saveButton = view.findViewById<Button>(R.id.save)
 
         recipeNameText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -72,11 +77,21 @@ class EditPostActivity : AppCompatActivity() {
             savePost(recipeNameText, ingredientsText, instructionsText)
         }
 
-        val backButton : Button = findViewById(R.id.back)
+        val backButton: Button = view.findViewById(R.id.back)
         backButton.setOnClickListener {
-            super.onBackPressed()
+            requireActivity().onBackPressed()
         }
+    }
+    companion object {
+        private const val POST_ID = "postId"
 
+        fun newInstance(postId: String?): EditPostFragment {
+            val fragment = EditPostFragment()
+            val args = Bundle()
+            args.putString(POST_ID, postId)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private fun savePost(
@@ -84,36 +99,35 @@ class EditPostActivity : AppCompatActivity() {
         ingredientsText: EditText,
         instructionsText: EditText
     ) {
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
         val recipeName = recipeNameText.text.toString()
         val ingredients = ingredientsText.text.toString()
         val instructions = instructionsText.text.toString()
 
-        if(!(currentUser?.email ?: "").isEmpty()){
+        if (!(currentUser?.email ?: "").isEmpty()) {
             val newPost = Post(
                 id = postId ?: UUID.randomUUID().toString(),
                 title = recipeName,
-                author=currentUser?.email ?:"",
+                author = currentUser?.email ?: "",
                 ingredients = ingredients,
                 instructions = instructions,
                 tags = selectedTagIds.toList(),
             )
 
-            Model.shared.addPost(newPost, postId !== null) { success ->
+            Model.shared.addPost(newPost, postId != null) { success ->
                 if (success) {
-                    Toast.makeText(this, "Post saved successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Post saved successfully", Toast.LENGTH_SHORT).show()
 
-                    //TODO navigate to home
+                    // TODO: Navigate to home, if necessary
                 } else {
-                    Toast.makeText(this, "Error saving post", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error saving post", Toast.LENGTH_SHORT).show()
                 }
             }
-        }else{
-            Toast.makeText(this, "Error saving post, try logging in again", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Error saving post, try logging in again", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun updateSaveButtonState(
         recipeNameText: EditText,
@@ -133,50 +147,45 @@ class EditPostActivity : AppCompatActivity() {
     private fun getPostDetails(postId: String) {
         // Fetch post by id using the model
         Model.shared.getPostById(postId) { post ->
-            runOnUiThread {
-                findViewById<EditText>(R.id.recipeNameText).setText(post?.title)
-                findViewById<EditText>(R.id.ingredientsText).setText(post?.ingredients)
-                findViewById<EditText>(R.id.instructionsText).setText(post?.instructions)
+            activity?.runOnUiThread {
+                view?.findViewById<EditText>(R.id.recipeNameText)?.setText(post?.title)
+                view?.findViewById<EditText>(R.id.ingredientsText)?.setText(post?.ingredients)
+                view?.findViewById<EditText>(R.id.instructionsText)?.setText(post?.instructions)
 
-                if((post?.tags?.size ?:0) > 0){
-                    for(tagId in post?.tags!!){
-                        selectedTagIds.add(tagId)
-                    }
+                post?.tags?.let { tags ->
+                    selectedTagIds.addAll(tags)
                 }
 
                 selectTags()
-
             }
         }
     }
 
     private fun loadTags() {
-        val flow = findViewById<androidx.constraintlayout.helper.widget.Flow>(R.id.tagsFlow)
-        val mainLayout = findViewById<ConstraintLayout>(R.id.main)
+        val flow = view?.findViewById<Flow>(R.id.tagsFlow)
+        val mainLayout = view?.findViewById<ConstraintLayout>(R.id.main)
 
         Model.shared.getAllTags { tags ->
-            runOnUiThread {
+            activity?.runOnUiThread {
                 val tagIds = mutableListOf<Int>()
 
                 for (tag in tags) {
                     val tagView = createTagView(tag.name, tag.id)
-                    mainLayout.addView(tagView)
+                    mainLayout?.addView(tagView)
                     tagIds.add(tagView.id)
-                    tagViews.add(tagView)  // Add the tag view to the list
+                    tagViews.add(tagView)
                 }
 
-                flow.referencedIds = tagIds.toIntArray()
-                selectTags()  // Call selectTags after loading the tags
+                flow?.referencedIds = tagIds.toIntArray()
+                selectTags()
             }
         }
     }
 
     private fun selectTags() {
-        // Loop through the tag views in the list
         for (tagView in tagViews) {
-            val tagId = tagView.tag.toString()  // Assuming you set the tagId as the tag in the view
+            val tagId = tagView.tag.toString()
 
-            // Check if the tag is in the selectedTagIds set
             if (selectedTagIds.contains(tagId)) {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
@@ -187,12 +196,11 @@ class EditPostActivity : AppCompatActivity() {
         }
     }
 
-
     private fun createTagView(tagName: String, tagId: String): TextView {
-        val tagView = LayoutInflater.from(this).inflate(R.layout.item_tag, null) as TextView
+        val tagView = LayoutInflater.from(requireContext()).inflate(R.layout.item_tag, null) as TextView
         tagView.id = ViewCompat.generateViewId()
         tagView.text = tagName
-        tagView.tag = tagId  // Store the tag ID as a tag
+        tagView.tag = tagId
 
         tagView.setOnClickListener {
             if (selectedTagIds.contains(tagId)) {
@@ -208,7 +216,4 @@ class EditPostActivity : AppCompatActivity() {
 
         return tagView
     }
-
-
-
 }

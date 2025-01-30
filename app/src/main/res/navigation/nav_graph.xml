@@ -35,5 +35,10 @@
         android:name="com.example.platepals.EditUserInfoFragment"
         android:label="Edit User Info" />
 
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.platepals.EditPostFragment"
+        android:label="Upsert post" />
+
 <!--    TODO add all fragments-->
 </navigation>
