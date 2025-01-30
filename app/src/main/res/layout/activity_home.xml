@@ -39,7 +39,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bar_menu"
         android:background="@color/white"
-        app:itemIconTint="@color/bottom_nav_item_color"/>
+        app:itemIconTint="@color/bottom_nav_item_color"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="24dp"/>
 
     <View
         android:id="@+id/navbar_divider"
