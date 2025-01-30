@@ -74,22 +74,22 @@ class FirebaseModel {
             }
     }
 
-    fun upsertUser(user: User, update: Boolean, callback: BooleanCallback) {
-        if(update){
-            database.collection(Constants.COLLECTIONS.USERS).whereEqualTo("email",user.email).get()
-                .addOnSuccessListener { documents ->
+    fun upsertUser(user: User, callback: BooleanCallback) {
+        database.collection(Constants.COLLECTIONS.USERS).whereEqualTo("email",user.email).get()
+            .addOnSuccessListener { documents ->
+                if(documents.size() == 0){
+                    database.collection(Constants.COLLECTIONS.USERS).document()
+                        .set(user.json).addOnSuccessListener{
+                            callback(true)
+                        }
+                }else{
                     for (document in documents) {
                         document.reference.update(user.json).addOnSuccessListener{
                             callback(true)
                         }
                     }
                 }
-        }else{
-            database.collection(Constants.COLLECTIONS.USERS).document()
-                .set(user.json)
-                .addOnCompleteListener {
-                    callback(true)
-                }
+
         }
     }
 }

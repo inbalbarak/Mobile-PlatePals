@@ -29,8 +29,8 @@ class Model private constructor() {
         firebaseModel.getUserById(email,callback)
     }
 
-    fun upsertUser(user: User, update: Boolean, callback: BooleanCallback) {
-        firebaseModel.upsertUser(user,update, callback)
+    fun upsertUser(user: User, callback: BooleanCallback) {
+        firebaseModel.upsertUser(user, callback)
     }
 
 }

@@ -26,12 +26,13 @@ class MainActivity : ComponentActivity() {
         val loginButton: Button = findViewById(R.id.login_btn);
         val registerButton : TextView = findViewById(R.id.open_register_btn)
         val auth = Firebase.auth
+
         if(auth.currentUser?.email != null){
             login(true,auth.currentUser?.email?:"")
         }
 
         loginButton.setOnClickListener {
-            val email = findViewById<EditText>(R.id.login_username).text.toString()
+            val email = findViewById<EditText>(R.id.login_email).text.toString()
             val password = findViewById<EditText>(R.id.login_password).text.toString()
 
             login(false,email,password)
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         .addOnCompleteListener(this){task->
                             if(task.isSuccessful){
                                 Toast.makeText(this,"authentication finished successfully", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, EditPostActivity::class.java)
+                                val intent = Intent(this, PersonalInfoActivity::class.java)
                                 startActivity(intent)
                                 //TODO move to home page
                             }else{
