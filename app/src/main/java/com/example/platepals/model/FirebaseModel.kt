@@ -3,6 +3,7 @@ import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
 import com.example.platepals.base.PostsCallback
+import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.base.UsersByEmailsCallback
@@ -37,6 +38,23 @@ class FirebaseModel {
                 }
             }
     }
+
+    fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
+        database.collection(Constants.COLLECTIONS.TAGS).whereIn("id", ids).get()
+            .addOnCompleteListener {
+                when (it.isSuccessful) {
+                    true -> {
+                        val tags: MutableList<Tag> = mutableListOf()
+                        for (json in it.result) {
+                            tags.add(Tag.fromJSON(json.data))
+                        }
+                        callback(tags)
+                    }
+                    false -> callback(listOf())
+                }
+            }
+    }
+
 
     fun addPost(post: Post, update: Boolean, callback: BooleanCallback) {
         if(update){

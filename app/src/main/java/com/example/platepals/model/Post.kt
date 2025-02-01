@@ -1,12 +1,15 @@
 package com.example.platepals.model
 
+import android.os.Parcelable
 import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
+import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
 import java.util.*
 
+@Parcelize
 @Entity
 data class Post(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
@@ -20,7 +23,7 @@ data class Post(
     val ingredients: String,
     val instructions: String,
     val createdAt: Date ?= Date()
-) {
+): Parcelable {
     companion object {
         private const val ID_KEY = "id"
         private const val TITLE_KEY = "title"

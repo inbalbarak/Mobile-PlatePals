@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.platepals.HomeActivity
 import com.example.platepals.PostsListViewModel
+import com.example.platepals.R
+import com.example.platepals.RecipeDetailsFragment
 import com.example.platepals.adapter.PostsRecyclerAdapter
 import com.example.platepals.databinding.FragmentPostsListBinding
 import com.example.platepals.model.Model
@@ -24,6 +27,7 @@ class PostsListFragment : Fragment() {
     private var binding: FragmentPostsListBinding? = null
     private var viewModel: PostsListViewModel? = null
     private var posts: List<Post>? = null
+    private var listener: OnItemClickListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,6 +56,17 @@ class PostsListFragment : Fragment() {
         adapter?.listener = object : OnItemClickListener {
             override fun onItemClick(post: Post?) {
                 Log.d("TAG", "On post clicked name: ${post?.title}")
+                (requireActivity() as? HomeActivity)?.onPostItemClick(post)
+
+//                post?.let {
+//                    val detailsFragment = RecipeDetailsFragment.newInstance(it)
+//
+//                    // Perform the fragment transaction
+//                    requireActivity().supportFragmentManager.beginTransaction()
+//                        .replace(R.id.fragmentContainerView, detailsFragment)
+//                        .addToBackStack(null)
+//                        .commit()
+//                }
             }
         }
 

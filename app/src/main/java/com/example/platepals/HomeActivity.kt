@@ -10,10 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentTransaction
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+
+//interface OnItemClickListener {
+//    fun onItemClick(post: Post?)
+//}
+
 
 class HomeActivity : AppCompatActivity() {
     private val selectedTagIds = mutableSetOf<String>()
@@ -85,6 +91,15 @@ class HomeActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
             .commit()
+    }
+
+    fun onPostItemClick(post: Post?) {
+        post?.let {
+            val detailsFragment = RecipeDetailsFragment.newInstance(it)
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.detailsFragmentContainerView, detailsFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
+        }
     }
 
     private fun loadTags() {

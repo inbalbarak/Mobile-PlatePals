@@ -16,19 +16,10 @@
         android:textStyle="bold"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/post_row_rating_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="10dp" />
-
-
-    <ImageView
-        android:id="@+id/post_row_rating_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/post_row_rating"
         app:layout_constraintStart_toEndOf="@+id/post_row_image"
-        app:srcCompat="@drawable/star_icon" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp" />
 
     <TextView
         android:id="@+id/post_row_rating"
@@ -37,9 +28,11 @@
         android:layout_marginTop="12dp"
         android:text="TextView"
         android:textSize="16sp"
+        app:drawableStartCompat="@drawable/star_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/post_row_rating_icon"
+        app:layout_constraintStart_toEndOf="@+id/post_row_image"
         app:layout_constraintTop_toBottomOf="@+id/post_row_title"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"/>
 
     <ImageView
@@ -47,6 +40,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="4dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,9 +57,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/post_row_rating_icon"
+        app:layout_constraintStart_toEndOf="@+id/post_row_image"
         app:layout_constraintTop_toBottomOf="@+id/post_row_rating"
         android:textStyle="italic"
-        android:layout_marginEnd="10dp"/>
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
