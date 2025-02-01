@@ -34,7 +34,7 @@
             android:id="@+id/username_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello, Yahli"
+            android:text="Text View"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="111dp"
@@ -86,10 +86,11 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@+id/buttonGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonGroup"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

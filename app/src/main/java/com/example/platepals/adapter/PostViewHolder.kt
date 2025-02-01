@@ -22,15 +22,15 @@ class PostViewHolder(
             this.post = post
             binding.postRowTitle.text = post?.title
             binding.postRowAuthor.text = post?.author
-            binding.postRowRating.text = "${post?.rating}"
+            binding.postRowRating.text = "${post?.rating ?: 0} | ${post?.ratingCount ?: 0} Reviews"
 
-            post?.imageUrl?.let { imageUrl ->
-                val url = imageUrl.ifBlank { return }
-
+//            post?.imageUrl?.let { imageUrl ->
+//                val url = imageUrl.ifBlank { return }
+//
 //                Picasso.get()
 //                    .load(url)
 //                    .placeholder(R.drawable.avatar)
 //                    .into(binding.imageView)
-            }
+//            }
         }
     }

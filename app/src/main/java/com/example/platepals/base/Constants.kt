@@ -9,6 +9,7 @@ typealias EmptyCallback = () -> Unit
 typealias PostsCallback = (List<Post>) -> Unit
 typealias PostCallback = (Post?) -> Unit
 typealias BooleanCallback = (Boolean) -> Unit
+typealias UsersByEmailsCallback = (Map<String, String>) -> Unit
 typealias UserCallback = (User?)-> Unit
 
 object Constants {

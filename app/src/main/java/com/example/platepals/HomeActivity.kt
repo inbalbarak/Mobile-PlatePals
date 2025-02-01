@@ -1,11 +1,9 @@
 package com.example.platepals
-
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class HomeActivity : AppCompatActivity() {
     private val selectedTagIds = mutableSetOf<String>()
@@ -47,6 +47,16 @@ class HomeActivity : AppCompatActivity() {
             selectedSort = R.id.newButton
             selectSort()
             loadFilteredPosts()
+        }
+
+        val auth = Firebase.auth
+
+        val greeting: TextView = findViewById(R.id.username_text);
+
+        Model.shared.getUserByEmail(auth.currentUser?.email?:"") { user ->
+
+            greeting.text = "Hello, ${user?.username}"
+
         }
     }
 
