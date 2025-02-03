@@ -8,15 +8,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:theme="@style/Theme.PlatePals"
         tools:targetApi="31">
         <activity
-            android:name=".PersonalInfoActivity"
+            android:name=".HomeActivity"
             android:exported="false" />
-        <activity
-            android:name=".EditPostActivity"
-            android:exported="false"></activity>
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
