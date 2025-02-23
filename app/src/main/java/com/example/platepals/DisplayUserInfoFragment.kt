@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 class DisplayUserInfoFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,12 +28,14 @@ class DisplayUserInfoFragment : Fragment() {
         ratingTextView.text = rating?.toString() ?: "0"
         usernameTextView.text = username
 
-        // TODO: Set avatar image
-
         val editButton: Button = view.findViewById(R.id.editProfile)
         editButton.setOnClickListener {
             val editFragment = EditUserInfoFragment.newInstance(username ?: "", avatarUrl ?: "")
-            (activity as? PersonalInfoActivity)?.showFragment(editFragment)
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, editFragment)
+                .addToBackStack(null)
+                .commit()
         }
 
         return view
