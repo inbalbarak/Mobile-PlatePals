@@ -43,7 +43,17 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.platepals.HomeFragment"
-        android:label="Home" />
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeDetailsFragment"
+        android:name="com.example.platepals.RecipeDetailsFragment"
+        android:label="Recipe Details" />
 
 <!--    TODO add all fragments-->
 </navigation>
