@@ -1,0 +1,44 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/personalInfoFragment">
+
+    <fragment
+        android:id="@+id/personalInfoFragment"
+        android:name="com.example.platepals.PersonalInfoFragment"
+        android:label="Personal Info"
+        tools:layout="@layout/fragment_personal_info">
+        <action
+            android:id="@+id/action_personalInfoFragment_to_displayUserInfoFragment"
+            app:destination="@id/displayUserInfoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/displayUserInfoFragment"
+        android:name="com.example.platepals.DisplayUserInfoFragment"
+        android:label="Display User Info">
+        <action
+            android:id="@+id/action_displayUserInfoFragment_to_editUserInfoFragment"
+            app:destination="@id/editUserInfoFragment">
+            <argument
+                android:name="username"
+                app:argType="string" />
+            <argument
+                android:name="avatarUrl"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editUserInfoFragment"
+        android:name="com.example.platepals.EditUserInfoFragment"
+        android:label="Edit User Info" />
+
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.example.platepals.EditPostFragment"
+        android:label="Upsert post" />
+
+<!--    TODO add all fragments-->
+</navigation>

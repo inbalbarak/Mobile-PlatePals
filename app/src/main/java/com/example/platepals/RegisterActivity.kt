@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
                                 if(task.isSuccessful){
                                     val intent = Intent(this, HomeActivity::class.java)
                                     startActivity(intent)
-                                } else{
+                               }else{
                                     Toast.makeText(this,"authentication failed", Toast.LENGTH_SHORT).show()
                                 }
                             }
