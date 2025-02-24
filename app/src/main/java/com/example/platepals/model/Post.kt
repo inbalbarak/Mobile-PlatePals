@@ -67,6 +67,7 @@ data class Post(
                 imageUrl = imageUrl,
                 tags = tags,
                 rating = tempRating,
+                ratingCount = ratingCount,
                 ingredients = ingredients,
                 instructions = instructions,
                 createdAt = createdAt
