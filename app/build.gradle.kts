@@ -20,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "CHATGPT_API_KEY", "\"${project.properties["CHATGPT_API_KEY"] ?: ""}\"")
+        buildConfigField("String", "CHATGPT_BASE_URL", "\"${project.properties["CHATGPT_BASE_URL"] ?: ""}\"")
     }
 
     buildTypes {
@@ -40,6 +43,8 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -74,5 +79,8 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 }
 
