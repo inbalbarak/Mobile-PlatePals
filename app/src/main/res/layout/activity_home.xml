@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".HomeActivity"
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_toolbar"
@@ -51,5 +52,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:background="#C1C1C1"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detailsFragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
