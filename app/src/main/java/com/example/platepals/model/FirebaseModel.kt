@@ -2,8 +2,13 @@ package com.example.platepals.model
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
+import com.example.platepals.base.PostsCallback
+import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
+import com.example.platepals.base.UsersByEmailsCallback
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
@@ -34,6 +39,23 @@ class FirebaseModel {
             }
     }
 
+    fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
+        database.collection(Constants.COLLECTIONS.TAGS).whereIn("id", ids).get()
+            .addOnCompleteListener {
+                when (it.isSuccessful) {
+                    true -> {
+                        val tags: MutableList<Tag> = mutableListOf()
+                        for (json in it.result) {
+                            tags.add(Tag.fromJSON(json.data))
+                        }
+                        callback(tags)
+                    }
+                    false -> callback(listOf())
+                }
+            }
+    }
+
+
     fun addPost(post: Post, update: Boolean, callback: BooleanCallback) {
         if(update){
             database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",post.id).get()
@@ -52,6 +74,49 @@ class FirebaseModel {
                 }
         }
     }
+
+    private fun getUsersByEmails(emails: List<String>, callback: UsersByEmailsCallback) {
+        if (emails.isEmpty()) {
+            callback(mapOf())
+            return
+        }
+
+        database.collection(Constants.COLLECTIONS.USERS)
+            .whereIn("email", emails)
+            .get()
+            .addOnSuccessListener { usersSnapshot ->
+                val emailToUsername = usersSnapshot.associate { doc ->
+                    val user = User.fromJSON(doc.data)
+                    user.email to (user.username ?: user.email)
+                }
+                callback(emailToUsername)
+            }
+            .addOnFailureListener { callback(mapOf()) }
+    }
+
+    fun getAllPosts(callback: PostsCallback) {
+        database.collection(Constants.COLLECTIONS.POSTS).get()
+            .addOnSuccessListener { postsSnapshot ->
+                if (postsSnapshot.isEmpty) {
+                    callback(listOf())
+                } else {
+                    val authorEmails = postsSnapshot.mapNotNull {
+                        it.data["author"] as? String
+                    }.distinct()
+
+                    getUsersByEmails(authorEmails) { emailToUsername ->
+                        val posts = postsSnapshot.map { json ->
+                            Post.fromJSON(json.data).let { post ->
+                                post.copy(author = emailToUsername[post.author] ?: post.author)
+                            }
+                        }
+                        callback(posts)
+                    }
+                }
+            }
+            .addOnFailureListener { callback(listOf()) }
+    }
+
 
     fun getPostById(postId: String, callback: PostCallback) {
         database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",postId).get()

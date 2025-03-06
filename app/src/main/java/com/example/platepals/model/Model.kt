@@ -3,6 +3,8 @@ package com.example.platepals.model
 import android.util.Log
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.PostCallback
+import com.example.platepals.base.PostsCallback
+import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.networking.ChatGptRequest
@@ -23,6 +25,14 @@ class Model private constructor() {
 
     fun getAllTags(callback: TagsCallback) {
         firebaseModel.getAllTags(callback)
+    }
+
+    fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
+        firebaseModel.getTagsByIds(ids, callback)
+    }
+
+    fun getAllPosts(callback: PostsCallback) {
+        firebaseModel.getAllPosts(callback)
     }
 
     fun getPostById(id: String, callback: PostCallback) {
