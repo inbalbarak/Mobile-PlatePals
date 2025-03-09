@@ -59,18 +59,10 @@ class PostsListFragment : Fragment() {
             Model.shared.deletePostById(postId){result->
                 if(result == false){
                     Toast.makeText(context, "Failed to delete post", Toast.LENGTH_SHORT).show()
-
-//                    Toast.makeText(this,"authentication failed", Toast.LENGTH_SHORT).show()
-                    //TODO banner
                 }else{
-//                    posts = posts?.filter { post -> post.id != postId }
+                    val updatedPosts = posts?.filter { post -> post.id != postId }
+                    adapter?.updatePosts(updatedPosts ?: emptyList())
 
-                    val position = posts?.indexOfFirst { it.id == postId } ?: -1
-                    if (position != -1) {
-                        posts = posts?.filter { it.id != postId }
-                        adapter?.notifyItemRemoved(position)
-                    }
-                    //refresh
                 }
             }
         }

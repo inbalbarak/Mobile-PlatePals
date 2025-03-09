@@ -12,7 +12,7 @@ import com.example.platepals.databinding.PostListRowBinding
 import com.example.platepals.model.Post
 
 class PostsRecyclerAdapter(
-    private val posts: List<Post>,
+    private var posts: List<Post>,
     private val editable: Boolean,
     private val onDelete: (postId: String) -> Unit // Delete function callback
 ) : RecyclerView.Adapter<PostsRecyclerAdapter.PostViewHolder>() {
@@ -27,6 +27,11 @@ class PostsRecyclerAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.bind(post, editable, onDelete)
+    }
+
+    fun updatePosts(newPosts: List<Post>) {
+        this.posts = newPosts
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = posts.size
@@ -53,6 +58,7 @@ class PostsRecyclerAdapter(
             // Click to delete post
             binding.deleteBtn.setOnClickListener {
                 onDelete(post.id)
+                posts = posts?.filter { existPost -> existPost.id != post.id } ?: emptyList()
             }
 
             binding.root.setOnClickListener {
