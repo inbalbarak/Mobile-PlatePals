@@ -38,7 +38,12 @@
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.example.platepals.EditPostFragment"
-        android:label="Upsert post" />
+        android:label="Upsert post" >
+        <argument
+            android:name="postId"
+            app:argType="string"
+            app:nullable="true" />  <!-- Allow null if needed -->
+    </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
@@ -55,5 +60,17 @@
         android:name="com.example.platepals.RecipeDetailsFragment"
         android:label="Recipe Details" />
 
-<!--    TODO add all fragments-->
+    <fragment
+        android:id="@+id/myRecipesFragment"
+        android:name="com.example.platepals.UploadedRecipesFragment"
+        android:label="Uploaded Recipes" >
+        <action
+            android:id="@+id/action_homeFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+        <action
+            android:id="@+id/action_myRecipesFragment_to_editPostFragment"
+            app:destination="@id/createPostFragment" />
+    </fragment>
+
+    <!--    TODO add all fragments-->
 </navigation>

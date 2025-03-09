@@ -79,7 +79,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPostsFragment(posts: List<Post>) {
-        val fragment = PostsListFragment.newInstance(posts)
+        val fragment = PostsListFragment.newInstance(posts,false)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
             .commit()

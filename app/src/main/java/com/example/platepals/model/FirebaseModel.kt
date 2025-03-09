@@ -157,4 +157,22 @@ class FirebaseModel {
 
         }
     }
+
+    fun deletePostById(postId: String, callback: BooleanCallback) {
+        database.collection(Constants.COLLECTIONS.POSTS)
+            .whereEqualTo("id", postId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    callback(false) // Post not found
+                } else {
+                    for (document in documents) {
+                        document.reference.delete()
+                            .addOnSuccessListener { callback(true) }
+                            .addOnFailureListener { callback(false) }
+                    }
+                }
+            }
+            .addOnFailureListener { callback(false) }
+    }
 }
