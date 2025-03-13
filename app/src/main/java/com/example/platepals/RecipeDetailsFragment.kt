@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +27,6 @@ class RecipeDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         post = arguments?.getParcelable("post")
 
         Log.i("yahli", "wow " + post.toString())
@@ -43,6 +43,12 @@ class RecipeDetailsFragment : Fragment() {
             authorName.text = post?.author
             creationDate.text = dateFormat.format(post?.createdAt)
         }
+
+
+        binding?.backBtn?.setOnClickListener{
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
 
 //            post?.imageUrl?.let { imageUrl ->
 //                val url = imageUrl.ifBlank { return }

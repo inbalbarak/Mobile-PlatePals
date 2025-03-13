@@ -47,6 +47,10 @@ class Model private constructor() {
         firebaseModel.upsertUser(user, callback)
     }
 
+    fun deletePostById(postId:String, callback: BooleanCallback){
+        firebaseModel.deletePostById(postId,callback)
+    }
+
     fun fetchChatGptResponse(body: ChatGptRequest, callback: (String?) -> Unit) {
         executor.execute {
             try {

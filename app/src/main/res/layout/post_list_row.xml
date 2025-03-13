@@ -51,16 +51,42 @@
         android:id="@+id/post_row_author"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:text="TextView"
         android:textSize="16sp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/post_row_image"
         app:layout_constraintTop_toBottomOf="@+id/post_row_rating"
-        android:textStyle="italic"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"/>
+        app:layout_constraintVertical_bias="0.269" />
+
+    <ImageButton
+        android:id="@+id/editBtn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/pen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/post_row_author"
+        app:layout_constraintTop_toBottomOf="@+id/post_row_author" />
+
+    <ImageButton
+        android:id="@+id/deleteBtn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/garbage_can"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editBtn"
+        app:layout_constraintTop_toBottomOf="@+id/post_row_author"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

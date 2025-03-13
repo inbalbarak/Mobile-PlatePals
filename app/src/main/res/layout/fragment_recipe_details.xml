@@ -17,6 +17,17 @@
         android:layout_height="match_parent"
         android:id="@+id/main">
 
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/android_arrow_back"
+            android:backgroundTint="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/recipeImage"
             android:layout_width="match_parent"
