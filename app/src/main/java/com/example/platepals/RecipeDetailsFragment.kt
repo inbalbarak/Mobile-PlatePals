@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.example.platepals.databinding.FragmentRecipeDetailsBinding
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -29,8 +30,6 @@ class RecipeDetailsFragment : Fragment() {
     ): View? {
         post = arguments?.getParcelable("post")
 
-        Log.i("yahli", "wow " + post.toString())
-
         binding = FragmentRecipeDetailsBinding.inflate(inflater, container, false)
 
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -42,22 +41,21 @@ class RecipeDetailsFragment : Fragment() {
             ingredientsTextView.text = post?.ingredients
             authorName.text = post?.author
             creationDate.text = dateFormat.format(post?.createdAt)
+
+            post?.imageUrl?.let {
+                if (it.isNotBlank()) {
+                    Picasso.get()
+                        .load(it)
+                        .placeholder(R.drawable.recipe_default)
+                        .into(binding?.recipeImage)
+                }
+            }
         }
 
 
         binding?.backBtn?.setOnClickListener{
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
-
-
-//            post?.imageUrl?.let { imageUrl ->
-//                val url = imageUrl.ifBlank { return }
-//
-//                Picasso.get()
-//                    .load(url)
-//                    .placeholder(R.drawable.avatar)
-//                    .into(binding.recipeImage)
-//            }
 
         loadTags()
 

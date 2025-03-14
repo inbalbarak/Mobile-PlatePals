@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.platepals.R
 import com.example.platepals.databinding.PostListRowBinding
 import com.example.platepals.model.Post
+import com.squareup.picasso.Picasso
 
 class PostsRecyclerAdapter(
     private var posts: List<Post>,
@@ -43,6 +44,15 @@ class PostsRecyclerAdapter(
             binding.postRowTitle.text = post.title
             binding.postRowRating.text = post.rating.toString()
             binding.postRowAuthor.text = post.author
+
+            post.imageUrl.let {
+                if (it.isNotBlank()) {
+                    Picasso.get()
+                        .load(it)
+                        .placeholder(R.drawable.empty_user_icon)
+                        .into(binding.postRowImage)
+                }
+            }
 
             // Show/hide buttons based on "editable"
             binding.editBtn.visibility = if (editable) View.VISIBLE else View.GONE

@@ -71,7 +71,7 @@ class EditUserInfoFragment : Fragment() {
             Model.shared.getUserByEmail(email) { user ->
                 var image: Bitmap? = null;
 
-                if(didSetProfileImage == true) {
+                if(didSetProfileImage) {
                     updatedProfileImage?.isDrawingCacheEnabled = true
                     updatedProfileImage?.buildDrawingCache()
                     val bitmap = (updatedProfileImage?.drawable as BitmapDrawable).bitmap

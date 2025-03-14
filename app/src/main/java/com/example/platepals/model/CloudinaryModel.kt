@@ -31,11 +31,8 @@ class CloudinaryModel {
         onSuccess: (String?) -> Unit,
         onError: (String?) -> Unit
     ) {
-        Log.i("yahli", "${MyApplication.Globals?.context}")
         val context = MyApplication.Globals.context ?: return
-        Log.i("yahli", "${bitmap.toString()}")
         val file: File = bitmap.toFile(context, name)
-
 
         MediaManager.get().upload(file.path)
             .option("folder", "images")
@@ -50,12 +47,10 @@ class CloudinaryModel {
 
                 override fun onSuccess(requestId: String?, resultData: Map<*, *>) {
                     val url = resultData["secure_url"] as? String ?: ""
-                    Log.i("yahli", "success")
                     onSuccess(url)
                 }
 
                 override fun onError(requestId: String?, error: ErrorInfo?) {
-                    Log.i("yahli", "error")
                     onError(error?.description ?: "Unknown error")
                 }
 

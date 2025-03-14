@@ -7,14 +7,13 @@
     android:layoutDirection="ltr"
     tools:context=".RecipeDetailsFragment"
     android:id="@+id/recipeDetailsLayout"
-    android:background="@color/white"
     android:clickable="true"
-
 >
     <!-- TODO remove background, clickable once navigating -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:id="@+id/main">
 
         <Button
@@ -33,8 +32,9 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/recipe_default"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
             android:id="@+id/recipeTitle"

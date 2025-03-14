@@ -27,7 +27,6 @@ class Model private constructor() {
         onSuccess: (String?) -> Unit,
         onError: (String?) -> Unit
     ) {
-        Log.i("yahli", "${bitmap.toString()} $name")
         cloudinaryModel.uploadImage(
             bitmap = bitmap,
             name = name,
@@ -36,8 +35,34 @@ class Model private constructor() {
         )
     }
 
-    fun addPost(post: Post, update: Boolean, callback: BooleanCallback) {
-        firebaseModel.addPost(post,update,callback)
+    fun addPost(post: Post, image: Bitmap?, update: Boolean, callback: BooleanCallback) {
+        val customCallback = { uri: String? ->
+            if (!uri.isNullOrBlank()) {
+
+                val updatedPost = post.copy(imageUrl = uri)
+
+                firebaseModel.addPost(updatedPost,true) { success ->
+                    callback(success)
+                }
+            } else {
+                callback(false)
+            }
+        }
+
+        firebaseModel.addPost(post, update) { success ->
+            if (success) {
+                image?.let {
+                    uploadImageToCloudinary(
+                        bitmap = image,
+                        name = post.id,
+                        onSuccess = customCallback,
+                        onError = { customCallback(null) }
+                    )
+                } ?: callback(true)
+            } else {
+                callback(false)
+            }
+        }
     }
 
     fun getAllTags(callback: TagsCallback) {
