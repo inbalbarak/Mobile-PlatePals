@@ -7,8 +7,6 @@ import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.base.UsersByEmailsCallback
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings

@@ -24,6 +24,9 @@ android {
 
         buildConfigField("String", "CHATGPT_API_KEY", "\"${project.properties["CHATGPT_API_KEY"] ?: ""}\"")
         buildConfigField("String", "CHATGPT_BASE_URL", "\"${project.properties["CHATGPT_BASE_URL"] ?: ""}\"")
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"${project.properties["CLOUDINARY_CLOUD_NAME"] ?: ""}\"")
+        buildConfigField("String", "CLOUDINARY_API_KEY", "\"${project.properties["CLOUDINARY_API_KEY"] ?: ""}\"")
+        buildConfigField("String", "CLOUDINARY_API_SECRET", "\"${project.properties["CLOUDINARY_API_SECRET"] ?: ""}\"")
     }
 
     buildTypes {
@@ -50,7 +53,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.cloudinary.android)
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
@@ -83,5 +86,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.gson)
     implementation(libs.converter.gson)
+    implementation(libs.picasso)
 }
 
