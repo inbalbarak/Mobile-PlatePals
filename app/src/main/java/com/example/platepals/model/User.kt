@@ -9,16 +9,12 @@ data class User (
     val email: String,
     val password: String,
     val username: String? = generateDefaultUsername(),
-    val ratingSum: Int? = 0,
-    val ratingCount: Int? = 0,
     val avatarUrl: String? = null,
 ) {
     companion object {
         private const val EMAIL_KEY = "email"
         private const val PASSWORD_KEY = "password"
         private const val USERNAME_KEY = "username"
-        private const val RATING_SUM_KEY = "ratingSum"
-        private const val RATING_COUNT_KEY = "ratingCount"
         private const val AVATAR_URL_KEY = "avatarUrl"
 
         private fun generateDefaultUsername(): String {
