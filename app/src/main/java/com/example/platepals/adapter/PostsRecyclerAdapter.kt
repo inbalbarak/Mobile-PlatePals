@@ -45,7 +45,7 @@ class PostsRecyclerAdapter(
             binding.postRowRating.text = post.rating.toString()
             binding.postRowAuthor.text = post.author
 
-            post.imageUrl.let {
+            post.imageUrl?.let {
                 if (it.isNotBlank()) {
                     Picasso.get()
                         .load(it)

@@ -15,7 +15,7 @@ data class Post(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val title: String,
     val author: String,
-    val imageUrl: String,
+    val imageUrl: String ?= "",
     val tags: List<String>,
     val rating: Double? = null,
     val ratingSum:Number?= 0,
@@ -81,7 +81,7 @@ data class Post(
                 ID_KEY to id,
                 TITLE_KEY to title,
                 AUTHOR_KEY to author,
-                IMAGE_URL_KEY to imageUrl,
+                IMAGE_URL_KEY to (imageUrl ?: ""),
                 TAGS_KEY to tags,
                 RATING_SUM_KEY to (ratingSum ?: 0),
                 RATING_COUNT_KEY to (ratingCount ?: 0),
@@ -92,4 +92,18 @@ data class Post(
             )
         }
 
+    val updateObject: Map<String, Any?>
+        get() {
+            return hashMapOf<String, Any?>().apply {
+                put(ID_KEY, id)
+                put(TITLE_KEY, title)
+                put(AUTHOR_KEY, author)
+                if (!imageUrl.isNullOrEmpty()) {
+                    put(IMAGE_URL_KEY, imageUrl)
+                }
+                put(TAGS_KEY, tags)
+                put(INGREDIENTS_KEY, ingredients)
+                put(INSTRUCTIONS_KEY, instructions)
+            }
+        }
 }

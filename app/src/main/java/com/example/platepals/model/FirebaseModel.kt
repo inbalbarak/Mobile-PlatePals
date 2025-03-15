@@ -1,4 +1,5 @@
 package com.example.platepals.model
+import android.util.Log
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
@@ -59,7 +60,7 @@ class FirebaseModel {
             database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",post.id).get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
-                        document.reference.update(post.json).addOnSuccessListener{
+                        document.reference.update(post.updateObject).addOnSuccessListener{
                             callback(true)
                         }
                     }

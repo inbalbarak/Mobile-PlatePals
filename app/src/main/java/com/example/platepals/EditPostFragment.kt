@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import com.google.firebase.auth.FirebaseAuth
@@ -133,7 +136,6 @@ class EditPostFragment : Fragment() {
                 author = currentUser?.email ?: "",
                 ingredients = ingredients,
                 instructions = instructions,
-                imageUrl = "",
                 tags = selectedTagIds.toList(),
             )
 
@@ -151,6 +153,10 @@ class EditPostFragment : Fragment() {
             Model.shared.addPost(newPost, image ,postId != null) { success ->
                 if (success) {
                     Toast.makeText(requireContext(), "Post saved successfully", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        requireActivity().onBackPressed()
+                    }, Toast.LENGTH_SHORT.toLong())
+
                 } else {
                     Toast.makeText(requireContext(), "Error saving post", Toast.LENGTH_SHORT).show()
                 }
@@ -183,9 +189,8 @@ class EditPostFragment : Fragment() {
                 view?.findViewById<EditText>(R.id.ingredientsText)?.setText(post?.ingredients)
                 view?.findViewById<EditText>(R.id.instructionsText)?.setText(post?.instructions)
 
-                // TODO: image not loading
-                post?.imageUrl.let {
-                    if (it.isNullOrBlank()) {
+                post?.imageUrl?.let {
+                    if (it.isNotBlank()) {
                         Picasso.get()
                             .load(it)
                             .placeholder(R.drawable.recipe_default)
