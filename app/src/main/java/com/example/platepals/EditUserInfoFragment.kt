@@ -39,8 +39,7 @@ class EditUserInfoFragment : Fragment() {
             Model.shared.getUserByEmail(email) { user ->
                 Model.shared.upsertUser(User(email, user?.password ?: "",updatedUsername.text.toString())) { success ->
                     if (success) {
-                        val rating = if(user?.ratingCount?.toInt() == 0)  0 else (user?.ratingSum?.toInt() ?: 1) / (user?.ratingCount?.toInt() ?: 1)
-                        val displayFragment = DisplayUserInfoFragment.newInstance(username ?: "",rating, avatarUrl ?: "")
+                        val displayFragment = DisplayUserInfoFragment.newInstance(username ?: "", avatarUrl ?: "")
 
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.fragmentContainerView, displayFragment)
