@@ -52,9 +52,6 @@ data class Post(
 
             var tempRating = 0.0
 
-            Log.i("yahli", "json: $json, createdAt: ${createdAt}");
-
-
             if(ratingCount != 0) {
                 tempRating = BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2).toDouble()
             }
