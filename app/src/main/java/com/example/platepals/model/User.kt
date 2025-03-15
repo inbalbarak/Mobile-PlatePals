@@ -30,16 +30,12 @@ data class User (
             val email = json[EMAIL_KEY] as? String ?: ""
             val password = json[PASSWORD_KEY] as? String ?: ""
             val username = json[USERNAME_KEY] as? String ?: generateDefaultUsername()
-            val ratingSum = json[RATING_SUM_KEY] as? Int ?: 0
-            val ratingCount = json[RATING_COUNT_KEY] as? Int ?: 0
             val avatarUrl = json[AVATAR_URL_KEY] as? String ?: ""
 
             return User(
                 email = email,
                 password = password,
                 username = username,
-                ratingSum = ratingSum,
-                ratingCount = ratingCount,
                 avatarUrl = avatarUrl
             )
         }
@@ -51,8 +47,6 @@ data class User (
                 EMAIL_KEY to email,
                 PASSWORD_KEY to password,
                 USERNAME_KEY to (username ?: generateDefaultUsername()),
-                RATING_SUM_KEY to (ratingSum ?: 0),
-                RATING_COUNT_KEY to (ratingCount ?: 0),
                 AVATAR_URL_KEY to (avatarUrl ?: "")
             )
         }
