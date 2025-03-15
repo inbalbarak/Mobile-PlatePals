@@ -1,12 +1,12 @@
 package com.example.platepals.model
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 @Parcelize
@@ -15,7 +15,7 @@ data class Post(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val title: String,
     val author: String,
-    val imageUrl: String,
+    val imageUrl: String ?= "",
     val tags: List<String>,
     val rating: Double? = null,
     val ratingSum:Number?= 0,
@@ -32,7 +32,6 @@ data class Post(
         private const val TAGS_KEY = "tags"
         private const val RATING_SUM_KEY = "ratingSum"
         private const val RATING_COUNT_KEY = "ratingCount"
-        private const val RATING_KEY = "rating"
         private const val INGREDIENTS_KEY = "ingredients"
         private const val INSTRUCTIONS_KEY = "instructions"
         private const val CREATED_AT_KEY = "createdAt"
@@ -52,11 +51,8 @@ data class Post(
 
             var tempRating = 0.0
 
-            Log.i("yahli", "json: $json, createdAt: ${createdAt}");
-
-
             if(ratingCount != 0) {
-                tempRating = BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2).toDouble()
+                tempRating = BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
             }
 
 
@@ -68,6 +64,7 @@ data class Post(
                 tags = tags,
                 rating = tempRating,
                 ratingCount = ratingCount,
+                ratingSum = ratingSum,
                 ingredients = ingredients,
                 instructions = instructions,
                 createdAt = createdAt
@@ -81,15 +78,34 @@ data class Post(
                 ID_KEY to id,
                 TITLE_KEY to title,
                 AUTHOR_KEY to author,
-                IMAGE_URL_KEY to imageUrl,
+                IMAGE_URL_KEY to (imageUrl ?: ""),
                 TAGS_KEY to tags,
                 RATING_SUM_KEY to (ratingSum ?: 0),
                 RATING_COUNT_KEY to (ratingCount ?: 0),
-                RATING_KEY to (rating ?: 0),
                 INGREDIENTS_KEY to ingredients,
                 INSTRUCTIONS_KEY to instructions,
                 CREATED_AT_KEY to (createdAt ?: Date())
             )
         }
 
+    val updateObject: Map<String, Any?>
+        get() {
+            return hashMapOf<String, Any?>().apply {
+                put(ID_KEY, id)
+                put(TITLE_KEY, title)
+                put(AUTHOR_KEY, author)
+                if (!imageUrl.isNullOrEmpty()) {
+                    put(IMAGE_URL_KEY, imageUrl)
+                }
+                if (ratingCount != null) {
+                    put(RATING_COUNT_KEY, ratingCount)
+                }
+                if (ratingSum != null) {
+                    put(RATING_SUM_KEY, ratingSum)
+                }
+                put(TAGS_KEY, tags)
+                put(INGREDIENTS_KEY, ingredients)
+                put(INSTRUCTIONS_KEY, instructions)
+            }
+        }
 }

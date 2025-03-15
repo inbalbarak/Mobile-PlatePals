@@ -2,19 +2,18 @@ package com.example.platepals
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.example.platepals.databinding.FragmentRecipeDetailsBinding
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -29,8 +28,6 @@ class RecipeDetailsFragment : Fragment() {
     ): View? {
         post = arguments?.getParcelable("post")
 
-        Log.i("yahli", "wow " + post.toString())
-
         binding = FragmentRecipeDetailsBinding.inflate(inflater, container, false)
 
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -42,22 +39,16 @@ class RecipeDetailsFragment : Fragment() {
             ingredientsTextView.text = post?.ingredients
             authorName.text = post?.author
             creationDate.text = dateFormat.format(post?.createdAt)
+
+            submitRatingButton.setOnClickListener {
+                submitRating(ratingBar.rating.toInt())
+            }
+
+            backBtn.setOnClickListener{
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
         }
-
-
-        binding?.backBtn?.setOnClickListener{
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
-
-//            post?.imageUrl?.let { imageUrl ->
-//                val url = imageUrl.ifBlank { return }
-//
-//                Picasso.get()
-//                    .load(url)
-//                    .placeholder(R.drawable.avatar)
-//                    .into(binding.recipeImage)
-//            }
 
         loadTags()
 
@@ -90,6 +81,35 @@ class RecipeDetailsFragment : Fragment() {
         tagView.tag = tagId
 
         return tagView
+    }
+
+    private fun submitRating(value: Int) {
+        post?.let {
+            val currentRatingSum = it.ratingSum?.toInt() ?: 0
+            val currentRatingCount = it.ratingCount?.toInt() ?: 0
+
+            val newRatingSum = currentRatingSum + value
+            val newRatingCount = currentRatingCount + 1
+
+            val updatedPost = it.copy(
+                ratingSum = newRatingSum,
+                ratingCount = newRatingCount,
+            )
+
+            Model.shared.addPost(updatedPost, true) { success ->
+                activity?.runOnUiThread {
+                    if (success) {
+                        val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
+                        binding?.rating?.text = newRating.toString()
+                        post = updatedPost
+                        Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
+                        binding?.ratingBar?.rating = 0f
+                    } else {
+                        Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
