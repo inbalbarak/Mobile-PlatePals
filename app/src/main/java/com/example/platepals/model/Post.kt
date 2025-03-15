@@ -1,12 +1,12 @@
 package com.example.platepals.model
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 import kotlinx.parcelize.Parcelize
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 @Parcelize
@@ -53,7 +53,7 @@ data class Post(
             var tempRating = 0.0
 
             if(ratingCount != 0) {
-                tempRating = BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2).toDouble()
+                tempRating = BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
             }
 
 

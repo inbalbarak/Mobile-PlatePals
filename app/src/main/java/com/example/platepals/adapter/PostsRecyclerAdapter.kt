@@ -1,11 +1,8 @@
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.platepals.R
 import com.example.platepals.databinding.PostListRowBinding
@@ -49,7 +46,7 @@ class PostsRecyclerAdapter(
                 if (it.isNotBlank()) {
                     Picasso.get()
                         .load(it)
-                        .placeholder(R.drawable.empty_user_icon)
+                        .placeholder(R.drawable.recipe_default)
                         .into(binding.postRowImage)
                 }
             }
@@ -68,7 +65,7 @@ class PostsRecyclerAdapter(
             // Click to delete post
             binding.deleteBtn.setOnClickListener {
                 onDelete(post.id)
-                posts = posts?.filter { existPost -> existPost.id != post.id } ?: emptyList()
+                posts = posts.filter { existPost -> existPost.id != post.id } ?: emptyList()
             }
 
             binding.root.setOnClickListener {

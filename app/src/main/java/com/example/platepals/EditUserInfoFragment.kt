@@ -69,31 +69,47 @@ class EditUserInfoFragment : Fragment() {
         updateButton.setOnClickListener {
 
             Model.shared.getUserByEmail(email) { user ->
-                var image: Bitmap? = null;
 
-                if(didSetProfileImage) {
-                    updatedProfileImage?.isDrawingCacheEnabled = true
-                    updatedProfileImage?.buildDrawingCache()
-                    val bitmap = (updatedProfileImage?.drawable as BitmapDrawable).bitmap
-                    image = bitmap
-                }
+                if (user != null) {
+                    var image: Bitmap? = null;
 
-                Model.shared.upsertUser(User(email, user?.password ?: "",updatedUsername.text.toString()), image = image) { success ->
-                    if (success) {
-                        val rating = if(user?.ratingCount?.toInt() == 0)  0 else (user?.ratingSum?.toInt() ?: 1) / (user?.ratingCount?.toInt() ?: 1)
-                        val displayFragment = DisplayUserInfoFragment.newInstance(username ?: "",rating, avatarUrl ?: "")
+                    if (didSetProfileImage) {
+                        updatedProfileImage?.isDrawingCacheEnabled = true
+                        updatedProfileImage?.buildDrawingCache()
+                        val bitmap = (updatedProfileImage?.drawable as BitmapDrawable).bitmap
+                        image = bitmap
+                    }
 
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView, displayFragment)
-                            .addToBackStack(null)
-                            .commit()
+                    val updatedUser = user.copy(
+                        username = updatedUsername.text.toString(),
+                    )
 
-                    } else {
-                        Toast.makeText(requireContext(), "Failed to update user info", Toast.LENGTH_SHORT).show()
+                    Model.shared.upsertUser(updatedUser, image = image) { success ->
+                        if (success) {
+                            val rating =
+                                if (user.ratingCount?.toInt() == 0) 0 else (user.ratingSum?.toInt()
+                                    ?: 1) / (user.ratingCount?.toInt() ?: 1)
+                            val displayFragment = DisplayUserInfoFragment.newInstance(
+                                username ?: "",
+                                rating,
+                                avatarUrl ?: ""
+                            )
+
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, displayFragment)
+                                .addToBackStack(null)
+                                .commit()
+
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to update user info",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
-
         }
 
         return view
