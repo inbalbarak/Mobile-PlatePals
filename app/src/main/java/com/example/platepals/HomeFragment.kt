@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import com.google.firebase.Firebase
@@ -34,7 +35,8 @@ class HomeFragment : Fragment() {
 
         loadTags(view)
         selectSort(view)
-        loadFilteredPosts()
+        observePosts()
+        refreshPosts()
 
         val topButton: Button = view.findViewById(R.id.topButton)
         val newButton: Button = view.findViewById(R.id.newButton)
@@ -42,13 +44,13 @@ class HomeFragment : Fragment() {
         topButton.setOnClickListener {
             selectedSort = R.id.topButton
             selectSort(view)
-            loadFilteredPosts()
+            filterAndShowPosts(Model.shared.posts.value ?: listOf())
         }
 
         newButton.setOnClickListener {
             selectedSort = R.id.newButton
             selectSort(view)
-            loadFilteredPosts()
+            filterAndShowPosts(Model.shared.posts.value ?: listOf())
         }
 
         val auth = Firebase.auth
@@ -71,26 +73,35 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadFilteredPosts() {
-        Model.shared.getAllPosts { allPosts ->
-            activity?.runOnUiThread {
-                var filteredPosts = allPosts.filter { post ->
-                    selectedTagIds.isEmpty() || post.tags?.any { tag -> selectedTagIds.contains(tag) } == true
-                }
+    private fun observePosts() {
+        Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
+            filterAndShowPosts(posts)
+        })
+    }
 
-                filteredPosts = if (selectedSort == R.id.newButton) {
-                    filteredPosts.sortedByDescending { it.createdAt }
-                } else {
-                    filteredPosts.sortedByDescending { it.rating }
-                }
-
-                showPostsFragment(filteredPosts)
-            }
+    private fun refreshPosts() {
+        Model.shared.refreshPosts { success ->
+            // This is optional: we could show a loading indicator or error message
+            // but since we're observing LiveData, the UI will update automatically
         }
     }
 
+    private fun filterAndShowPosts(allPosts: List<Post>) {
+        var filteredPosts = allPosts.filter { post ->
+            selectedTagIds.isEmpty() || post.tags?.any { tag -> selectedTagIds.contains(tag) } == true
+        }
+
+        filteredPosts = if (selectedSort == R.id.newButton) {
+            filteredPosts.sortedByDescending { it.createdAt }
+        } else {
+            filteredPosts.sortedByDescending { it.rating }
+        }
+
+        showPostsFragment(filteredPosts)
+    }
+
     private fun showPostsFragment(posts: List<Post>) {
-        val fragment = PostsListFragment.newInstance(posts,false)
+        val fragment = PostsListFragment.newInstance(posts, false)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
             .commit()
@@ -146,7 +157,7 @@ class HomeFragment : Fragment() {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
             }
-            loadFilteredPosts()
+            filterAndShowPosts(Model.shared.posts.value ?: listOf())
         }
         return tagView
     }

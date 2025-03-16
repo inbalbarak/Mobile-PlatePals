@@ -26,7 +26,6 @@ class Model private constructor() {
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
     val posts: LiveData<List<Post>> = database.PostDau().getAllPosts()
 
-
     companion object {
         val shared = Model()
     }
@@ -83,47 +82,40 @@ class Model private constructor() {
         firebaseModel.getTagsByIds(ids, callback)
     }
 
-    fun getAllPosts(callback: PostsCallback) {
+    fun refreshPosts(callback: BooleanCallback) {
         var lastUpdated: Long = Post.lastUpdated
 
-        firebaseModel.getAllPosts(lastUpdated){posts->
-
-            executor.execute{
+        firebaseModel.getAllPosts(lastUpdated) { posts ->
+            executor.execute {
                 val latestTime = lastUpdated
 
-                for (post in posts){
+                for (post in posts) {
                     database.PostDau().insertAll(post)
 
-                    post.lastUpdated?.let{
-                        if (latestTime < it){
+                    post.lastUpdated?.let {
+                        if (latestTime < it) {
                             lastUpdated = it
                         }
                     }
                 }
 
                 Post.lastUpdated = lastUpdated
-                val posts = database.PostDau().getAllPosts()
-
-                mainHandler.post{
-                    callback(posts)
+                mainHandler.post {
+                    callback(true)
                 }
             }
-
         }
     }
 
-
-
     fun getPostById(id: String, callback: PostCallback) {
-        firebaseModel.getPostById(id,callback)
+        firebaseModel.getPostById(id, callback)
     }
 
     fun getUserByEmail(email: String, callback: UserCallback) {
-        firebaseModel.getUserById(email,callback)
+        firebaseModel.getUserById(email, callback)
     }
 
     fun upsertUser(user: User, image: Bitmap?, callback: BooleanCallback) {
-
         val customCallback = { uri: String? ->
             if (!uri.isNullOrBlank()) {
                 val updatedUser = user.copy(avatarUrl = uri)
@@ -151,32 +143,32 @@ class Model private constructor() {
         }
     }
 
-        fun deletePostById(postId: String, callback: BooleanCallback) {
-            firebaseModel.deletePostById(postId, callback)
-        }
+    fun deletePostById(postId: String, callback: BooleanCallback) {
+        firebaseModel.deletePostById(postId, callback)
+    }
 
-        fun fetchChatGptResponse(body: ChatGptRequest, callback: (String?) -> Unit) {
-            executor.execute {
-                try {
-                    val request = ChatgptClient.chatgptApiClient.getChatResponse(body)
-                    val response = request.execute()
+    fun fetchChatGptResponse(body: ChatGptRequest, callback: (String?) -> Unit) {
+        executor.execute {
+            try {
+                val request = ChatgptClient.chatgptApiClient.getChatResponse(body)
+                val response = request.execute()
 
-                    if (response.isSuccessful) {
-                        val chatResponse = response.body()?.choices?.firstOrNull()?.message?.content
-                            ?: "Sorry, I didn't get that."
-                        callback(chatResponse)
-                        Log.e("chatgpt", "Fetched ChatGPT response: $chatResponse")
-                    } else {
-                        callback("Oops! Something went wrong.")
-                        Log.e(
-                            "chatgpt",
-                            "Failed to fetch ChatGPT response: ${response.code()} - ${response.message()}\")"
-                        )
-                    }
-                } catch (e: Exception) {
-                    callback("An error has occurred.")
-                    Log.e("chatgpt", "Failed to fetch ChatGPT response with exception: $e")
+                if (response.isSuccessful) {
+                    val chatResponse = response.body()?.choices?.firstOrNull()?.message?.content
+                        ?: "Sorry, I didn't get that."
+                    callback(chatResponse)
+                    Log.e("chatgpt", "Fetched ChatGPT response: $chatResponse")
+                } else {
+                    callback("Oops! Something went wrong.")
+                    Log.e(
+                        "chatgpt",
+                        "Failed to fetch ChatGPT response: ${response.code()} - ${response.message()}\")"
+                    )
                 }
+            } catch (e: Exception) {
+                callback("An error has occurred.")
+                Log.e("chatgpt", "Failed to fetch ChatGPT response with exception: $e")
             }
         }
     }
+}
