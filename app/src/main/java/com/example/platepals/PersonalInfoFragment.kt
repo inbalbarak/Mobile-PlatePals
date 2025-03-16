@@ -43,6 +43,32 @@ class PersonalInfoFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+        refreshUserData()
+
+//        Model.shared.getUserByEmail(auth.currentUser?.email ?: "") { user ->
+//            userInfo = user
+//
+//            val rating = if (user?.ratingCount?.toInt() == 0) {
+//                0
+//            } else {
+//                (user?.ratingSum?.toInt() ?: 1) / (user?.ratingCount?.toInt() ?: 1)
+//            }
+//
+//            val displayFragment = DisplayUserInfoFragment.newInstance(
+//                user?.username ?: "",
+//                rating,
+//                user?.avatarUrl ?: ""
+//            )
+//
+//            childFragmentManager.beginTransaction()
+//                .replace(R.id.fragmentContainerView, displayFragment)
+//                .commit()
+//        }
+    }
+
+    fun refreshUserData() {
+        val auth = Firebase.auth
+
         Model.shared.getUserByEmail(auth.currentUser?.email ?: "") { user ->
             userInfo = user
 
