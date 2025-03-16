@@ -1,6 +1,5 @@
 package com.example.platepals
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,17 +48,17 @@ class RecipeDetailsFragment : Fragment() {
                         .into(binding?.recipeImage)
                 }
             }
-        }
 
             submitRatingButton.setOnClickListener {
                 submitRating(ratingBar.rating.toInt())
             }
 
-            backBtn.setOnClickListener{
+            backBtn.setOnClickListener {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
 
-        loadTags()
+            loadTags()
+        }
 
         return binding?.root
     }
@@ -105,7 +104,9 @@ class RecipeDetailsFragment : Fragment() {
                 ratingCount = newRatingCount,
             )
 
-            Model.shared.addPost(updatedPost, true) { success ->
+            Model.shared.addPost(
+                updatedPost, null, true
+            ) { success ->
                 activity?.runOnUiThread {
                     if (success) {
                         val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()

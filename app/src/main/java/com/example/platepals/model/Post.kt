@@ -97,10 +97,10 @@ data class Post(
                 if (!imageUrl.isNullOrEmpty()) {
                     put(IMAGE_URL_KEY, imageUrl)
                 }
-                if (ratingCount != null) {
+                if (ratingCount != 0) {
                     put(RATING_COUNT_KEY, ratingCount)
                 }
-                if (ratingSum != null) {
+                if (ratingSum != 0) {
                     put(RATING_SUM_KEY, ratingSum)
                 }
                 put(TAGS_KEY, tags)
