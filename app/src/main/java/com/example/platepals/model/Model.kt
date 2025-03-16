@@ -1,13 +1,18 @@
 package com.example.platepals.model
 
 import android.graphics.Bitmap
+import android.os.Looper
 import android.util.Log
+import androidx.core.os.HandlerCompat
+import androidx.lifecycle.LiveData
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.PostCallback
 import com.example.platepals.base.PostsCallback
 import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
+import com.example.platepals.model.dao.AppLocalDb
+import com.example.platepals.model.dao.AppLocalDbRepository
 import com.example.platepals.networking.ChatGptRequest
 import com.example.platepals.networking.ChatgptClient
 import java.util.concurrent.Executors
@@ -16,6 +21,11 @@ class Model private constructor() {
     private var executor = Executors.newSingleThreadExecutor()
     private val firebaseModel = FirebaseModel()
     private val cloudinaryModel = CloudinaryModel()
+
+    private val database: AppLocalDbRepository = AppLocalDb.database
+    private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
+    val posts: LiveData<List<Post>> = database.PostDau().getAllPosts()
+
 
     companion object {
         val shared = Model()
@@ -74,8 +84,35 @@ class Model private constructor() {
     }
 
     fun getAllPosts(callback: PostsCallback) {
-        firebaseModel.getAllPosts(callback)
+        var lastUpdated: Long = Post.lastUpdated
+
+        firebaseModel.getAllPosts(lastUpdated){posts->
+
+            executor.execute{
+                val latestTime = lastUpdated
+
+                for (post in posts){
+                    database.PostDau().insertAll(post)
+
+                    post.lastUpdated?.let{
+                        if (latestTime < it){
+                            lastUpdated = it
+                        }
+                    }
+                }
+
+                Post.lastUpdated = lastUpdated
+                val posts = database.PostDau().getAllPosts()
+
+                mainHandler.post{
+                    callback(posts)
+                }
+            }
+
+        }
     }
+
+
 
     fun getPostById(id: String, callback: PostCallback) {
         firebaseModel.getPostById(id,callback)

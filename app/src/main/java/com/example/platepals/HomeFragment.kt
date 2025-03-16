@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
         Model.shared.getAllPosts { allPosts ->
             activity?.runOnUiThread {
                 var filteredPosts = allPosts.filter { post ->
-                    selectedTagIds.isEmpty() || post.tags.any { tag -> selectedTagIds.contains(tag) }
+                    selectedTagIds.isEmpty() || post.tags?.any { tag -> selectedTagIds.contains(tag) } == true
                 }
 
                 filteredPosts = if (selectedSort == R.id.newButton) {

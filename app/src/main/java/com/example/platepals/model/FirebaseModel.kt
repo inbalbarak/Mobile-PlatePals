@@ -8,6 +8,7 @@ import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.base.UsersByEmailsCallback
+import com.example.platepals.utils.extentions.toFirebaseTimestamp
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
@@ -93,8 +94,10 @@ class FirebaseModel {
             .addOnFailureListener { callback(mapOf()) }
     }
 
-    fun getAllPosts(callback: PostsCallback) {
-        database.collection(Constants.COLLECTIONS.POSTS).get()
+    fun getAllPosts(sinceLastUpdated: Long, callback: PostsCallback) {
+        database.collection(Constants.COLLECTIONS.POSTS)
+            .whereGreaterThanOrEqualTo(Post.LAST_UPDATED, sinceLastUpdated.toFirebaseTimestamp)
+            .get()
             .addOnSuccessListener { postsSnapshot ->
                 if (postsSnapshot.isEmpty) {
                     callback(listOf())

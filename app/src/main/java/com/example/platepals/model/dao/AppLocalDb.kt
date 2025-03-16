@@ -3,12 +3,20 @@ package com.example.platepals.model.dao
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.platepals.base.MyApplication
+import com.example.platepals.model.Converters
+import com.example.platepals.model.Post
+import com.example.platepals.model.Tag
 import com.example.platepals.model.User
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class, Tag:: class, Post::class ], version = 2)
+@TypeConverters(Converters::class)
 abstract class AppLocalDbRepository: RoomDatabase(){
     abstract fun UserDao(): UserDao
+    abstract fun TagDau(): TagDao
+    abstract fun PostDau(): PostDao
+
 }
 
 object AppLocalDb{
