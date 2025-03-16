@@ -43,6 +43,12 @@ class PersonalInfoFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
+        refreshUserData()
+    }
+
+    fun refreshUserData() {
+        val auth = Firebase.auth
+
         Model.shared.getUserByEmail(auth.currentUser?.email ?: "") { user ->
             userInfo = user
 

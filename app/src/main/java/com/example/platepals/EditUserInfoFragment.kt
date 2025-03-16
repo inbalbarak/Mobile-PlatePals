@@ -86,20 +86,12 @@ class EditUserInfoFragment : Fragment() {
 
                     Model.shared.upsertUser(updatedUser, image = image) { success ->
                         if (success) {
-                            val rating =
-                                if (user.ratingCount?.toInt() == 0) 0 else (user.ratingSum?.toInt()
-                                    ?: 1) / (user.ratingCount?.toInt() ?: 1)
-                            val displayFragment = DisplayUserInfoFragment.newInstance(
-                                username ?: "",
-                                rating,
-                                avatarUrl ?: ""
-                            )
+                            parentFragmentManager.popBackStack()
 
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragmentContainerView, displayFragment)
-                                .addToBackStack(null)
-                                .commit()
-
+                            val parentFragment = parentFragment
+                            if (parentFragment is PersonalInfoFragment) {
+                                parentFragment.refreshUserData()
+                            }
                         } else {
                             Toast.makeText(
                                 requireContext(),
