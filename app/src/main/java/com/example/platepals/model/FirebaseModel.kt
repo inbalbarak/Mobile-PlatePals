@@ -1,4 +1,5 @@
 package com.example.platepals.model
+import android.util.Log
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
@@ -7,8 +8,6 @@ import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.base.UsersByEmailsCallback
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
@@ -61,7 +60,7 @@ class FirebaseModel {
             database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",post.id).get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
-                        document.reference.update(post.json).addOnSuccessListener{
+                        document.reference.update(post.updateObject).addOnSuccessListener{
                             callback(true)
                         }
                     }

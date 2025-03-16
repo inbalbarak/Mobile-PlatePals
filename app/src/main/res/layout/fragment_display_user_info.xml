@@ -17,10 +17,11 @@
             android:layout_width="180dp"
             android:layout_height="180dp"
             android:layout_marginTop="64dp"
+            android:src="@drawable/empty_user_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+             />
 
         <ImageView
             android:id="@+id/usernameIcon"
@@ -69,10 +70,11 @@
             android:id="@+id/editProfile"
             android:layout_width="286dp"
             android:layout_height="42dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/orange_rounded_text_field"
             android:text="Edit profile"
             android:textColor="#FF9B05"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"

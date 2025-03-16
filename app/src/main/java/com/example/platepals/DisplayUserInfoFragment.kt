@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 class DisplayUserInfoFragment : Fragment() {
 
@@ -23,10 +24,19 @@ class DisplayUserInfoFragment : Fragment() {
 
         val ratingTextView = view.findViewById<TextView>(R.id.ratingText)
         val usernameTextView = view.findViewById<TextView>(R.id.usernameText)
-        val avatar: ImageView = view.findViewById(R.id.avatarImage)
+        val avatarImageView: ImageView = view.findViewById(R.id.avatarImage)
 
         ratingTextView.text = rating?.toString() ?: "0"
         usernameTextView.text = username
+
+        avatarUrl?.let {
+            if (it.isNotBlank()) {
+                Picasso.get()
+                    .load(it)
+                    .placeholder(R.drawable.empty_user_icon)
+                    .into(avatarImageView)
+            }
+        }
 
         val editButton: Button = view.findViewById(R.id.editProfile)
         editButton.setOnClickListener {

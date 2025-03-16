@@ -51,6 +51,24 @@
             app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
+        <ImageView
+            android:id="@+id/updatedProfileImage"
+            android:layout_width="153dp"
+            android:layout_height="145dp"
+            android:src="@drawable/empty_user_icon"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/takePhotoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/add_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/updatedProfileImage"
+            app:layout_constraintStart_toEndOf="@+id/updatedProfileImage" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
