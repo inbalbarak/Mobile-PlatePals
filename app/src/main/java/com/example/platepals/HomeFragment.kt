@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
@@ -15,6 +16,7 @@ import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.squareup.picasso.Picasso
 
 class HomeFragment : Fragment() {
     private val selectedTagIds = mutableSetOf<String>()
@@ -51,10 +53,20 @@ class HomeFragment : Fragment() {
 
         val auth = Firebase.auth
         val greeting: TextView = view.findViewById(R.id.username_text)
+        val profileImage: ImageView = view.findViewById(R.id.profile_image)
 
         Model.shared.getUserByEmail(auth.currentUser?.email ?: "") { user ->
             activity?.runOnUiThread {
                 greeting.text = "Hello, ${user?.username}"
+
+                user?.avatarUrl?.let {
+                    if (it.isNotBlank()) {
+                        Picasso.get()
+                            .load(it)
+                            .placeholder(R.drawable.empty_user_icon)
+                            .into(profileImage)
+                    }
+                }
             }
         }
     }
@@ -72,7 +84,6 @@ class HomeFragment : Fragment() {
                     filteredPosts.sortedByDescending { it.rating }
                 }
 
-                Log.i("yahli", filteredPosts.toString())
                 showPostsFragment(filteredPosts)
             }
         }

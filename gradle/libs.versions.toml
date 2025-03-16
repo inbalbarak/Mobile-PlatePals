@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.2"
+cloudinaryAndroid = "3.0.2"
 firebaseBom = "33.7.0"
 fragmentKtx = "1.8.5"
 kotlin = "2.0.0"
@@ -15,6 +16,7 @@ navigationFragmentKtx = "2.8.5"
 navigationSafeArgsGradlePlugin = "2.8.5"
 appcompat = "1.7.0"
 constraintlayout = "2.1.4"
+picasso = "2.8"
 roomRuntimeVersion = "2.6.1"
 material = "1.12.0"
 activity = "1.9.3"
@@ -28,6 +30,7 @@ androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fr
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navigationFragmentKtx" }
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePlugin" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
@@ -48,6 +51,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntimeVersion" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntimeVersion" }
+picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntimeVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }

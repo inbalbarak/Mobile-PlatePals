@@ -1,15 +1,13 @@
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.platepals.R
 import com.example.platepals.databinding.PostListRowBinding
 import com.example.platepals.model.Post
+import com.squareup.picasso.Picasso
 
 class PostsRecyclerAdapter(
     private var posts: List<Post>,
@@ -44,6 +42,15 @@ class PostsRecyclerAdapter(
             binding.postRowRating.text = post.rating.toString()
             binding.postRowAuthor.text = post.author
 
+            post.imageUrl?.let {
+                if (it.isNotBlank()) {
+                    Picasso.get()
+                        .load(it)
+                        .placeholder(R.drawable.recipe_default)
+                        .into(binding.postRowImage)
+                }
+            }
+
             // Show/hide buttons based on "editable"
             binding.editBtn.visibility = if (editable) View.VISIBLE else View.GONE
             binding.deleteBtn.visibility = if (editable) View.VISIBLE else View.GONE
@@ -58,7 +65,7 @@ class PostsRecyclerAdapter(
             // Click to delete post
             binding.deleteBtn.setOnClickListener {
                 onDelete(post.id)
-                posts = posts?.filter { existPost -> existPost.id != post.id } ?: emptyList()
+                posts = posts.filter { existPost -> existPost.id != post.id } ?: emptyList()
             }
 
             binding.root.setOnClickListener {

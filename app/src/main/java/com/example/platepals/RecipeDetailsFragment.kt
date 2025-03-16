@@ -14,6 +14,7 @@ import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import java.math.BigDecimal
 import java.math.RoundingMode
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -40,6 +41,16 @@ class RecipeDetailsFragment : Fragment() {
             authorName.text = post?.author
             creationDate.text = dateFormat.format(post?.createdAt)
 
+            post?.imageUrl?.let {
+                if (it.isNotBlank()) {
+                    Picasso.get()
+                        .load(it)
+                        .placeholder(R.drawable.recipe_default)
+                        .into(binding?.recipeImage)
+                }
+            }
+        }
+
             submitRatingButton.setOnClickListener {
                 submitRating(ratingBar.rating.toInt())
             }
@@ -47,8 +58,6 @@ class RecipeDetailsFragment : Fragment() {
             backBtn.setOnClickListener{
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-
-        }
 
         loadTags()
 

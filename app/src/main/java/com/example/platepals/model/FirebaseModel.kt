@@ -1,4 +1,5 @@
 package com.example.platepals.model
+import android.util.Log
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
