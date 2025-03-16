@@ -32,7 +32,6 @@ data class Post(
         private const val TAGS_KEY = "tags"
         private const val RATING_SUM_KEY = "ratingSum"
         private const val RATING_COUNT_KEY = "ratingCount"
-        private const val RATING_KEY = "rating"
         private const val INGREDIENTS_KEY = "ingredients"
         private const val INSTRUCTIONS_KEY = "instructions"
         private const val CREATED_AT_KEY = "createdAt"
@@ -65,6 +64,7 @@ data class Post(
                 tags = tags,
                 rating = tempRating,
                 ratingCount = ratingCount,
+                ratingSum = ratingSum,
                 ingredients = ingredients,
                 instructions = instructions,
                 createdAt = createdAt
@@ -82,7 +82,6 @@ data class Post(
                 TAGS_KEY to tags,
                 RATING_SUM_KEY to (ratingSum ?: 0),
                 RATING_COUNT_KEY to (ratingCount ?: 0),
-                RATING_KEY to (rating ?: 0),
                 INGREDIENTS_KEY to ingredients,
                 INSTRUCTIONS_KEY to instructions,
                 CREATED_AT_KEY to (createdAt ?: Date())
@@ -97,6 +96,12 @@ data class Post(
                 put(AUTHOR_KEY, author)
                 if (!imageUrl.isNullOrEmpty()) {
                     put(IMAGE_URL_KEY, imageUrl)
+                }
+                if (ratingCount != 0) {
+                    put(RATING_COUNT_KEY, ratingCount)
+                }
+                if (ratingSum != 0) {
+                    put(RATING_SUM_KEY, ratingSum)
                 }
                 put(TAGS_KEY, tags)
                 put(INGREDIENTS_KEY, ingredients)

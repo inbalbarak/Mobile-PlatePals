@@ -1,20 +1,18 @@
 package com.example.platepals
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.example.platepals.databinding.FragmentRecipeDetailsBinding
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
+import java.math.BigDecimal
+import java.math.RoundingMode
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -50,14 +48,17 @@ class RecipeDetailsFragment : Fragment() {
                         .into(binding?.recipeImage)
                 }
             }
+
+            submitRatingButton.setOnClickListener {
+                submitRating(ratingBar.rating.toInt())
+            }
+
+            backBtn.setOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            loadTags()
         }
-
-
-        binding?.backBtn?.setOnClickListener{
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
-        loadTags()
 
         return binding?.root
     }
@@ -88,6 +89,37 @@ class RecipeDetailsFragment : Fragment() {
         tagView.tag = tagId
 
         return tagView
+    }
+
+    private fun submitRating(value: Int) {
+        post?.let {
+            val currentRatingSum = it.ratingSum?.toInt() ?: 0
+            val currentRatingCount = it.ratingCount?.toInt() ?: 0
+
+            val newRatingSum = currentRatingSum + value
+            val newRatingCount = currentRatingCount + 1
+
+            val updatedPost = it.copy(
+                ratingSum = newRatingSum,
+                ratingCount = newRatingCount,
+            )
+
+            Model.shared.addPost(
+                updatedPost, null, true
+            ) { success ->
+                activity?.runOnUiThread {
+                    if (success) {
+                        val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
+                        binding?.rating?.text = newRating.toString()
+                        post = updatedPost
+                        Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
+                        binding?.ratingBar?.rating = 0f
+                    } else {
+                        Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

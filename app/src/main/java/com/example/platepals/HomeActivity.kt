@@ -22,14 +22,24 @@ class HomeActivity : AppCompatActivity() {
 
         val navHostFragment: NavHostFragment? = supportFragmentManager.findFragmentById(R.id.main_nav_host) as? NavHostFragment
         navController = navHostFragment?.navController
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_bar)
+
         navController?.let {
             NavigationUI.setupActionBarWithNavController(
                 activity = this,
                 navController = it
             )
-        }
 
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_bar)
-        navController?.let { NavigationUI.setupWithNavController(bottomNavigationView, it) }
+            NavigationUI.setupWithNavController(bottomNavigationView, it)
+
+            bottomNavigationView.setOnItemSelectedListener { item ->
+                // Pop back to the start destination of the graph
+                it.popBackStack(it.graph.startDestinationId ?: 0, false)
+
+                // Then navigate to the selected item
+                NavigationUI.onNavDestinationSelected(item, it)
+                true
+            }
+        }
     }
 }

@@ -19,14 +19,11 @@ class DisplayUserInfoFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_display_user_info, container, false)
 
         val username = arguments?.getString(USERNAME)
-        val rating = arguments?.getInt(RATING)
         val avatarUrl = arguments?.getString(AVATAR_URL)
 
-        val ratingTextView = view.findViewById<TextView>(R.id.ratingText)
         val usernameTextView = view.findViewById<TextView>(R.id.usernameText)
         val avatarImageView: ImageView = view.findViewById(R.id.avatarImage)
 
-        ratingTextView.text = rating?.toString() ?: "0"
         usernameTextView.text = username
 
         avatarUrl?.let {
@@ -53,14 +50,12 @@ class DisplayUserInfoFragment : Fragment() {
 
     companion object {
         private const val USERNAME = "username"
-        private const val RATING = "rating"
         private const val AVATAR_URL = "avatarUrl"
 
-        fun newInstance(username: String, rating: Int, avatarUrl: String): DisplayUserInfoFragment {
+        fun newInstance(username: String, avatarUrl: String): DisplayUserInfoFragment {
             val fragment = DisplayUserInfoFragment()
             val args = Bundle()
             args.putString(USERNAME, username)
-            args.putInt(RATING, rating)
             args.putString(AVATAR_URL, avatarUrl)
             fragment.arguments = args
             return fragment
