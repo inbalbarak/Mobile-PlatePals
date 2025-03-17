@@ -137,6 +137,9 @@ class EditPostFragment : Fragment() {
                 ingredients = ingredients,
                 instructions = instructions,
                 tags = selectedTagIds.toList(),
+                ratingCount = 0,
+                ratingSum = 0,
+                rating = 0.0
             )
 
             var image: Bitmap? = null;

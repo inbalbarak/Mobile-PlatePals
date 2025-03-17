@@ -36,7 +36,6 @@ class HomeFragment : Fragment() {
         loadTags(view)
         selectSort(view)
         observePosts()
-        refreshPosts()
 
         val topButton: Button = view.findViewById(R.id.topButton)
         val newButton: Button = view.findViewById(R.id.newButton)
@@ -77,13 +76,6 @@ class HomeFragment : Fragment() {
         Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
             filterAndShowPosts(posts)
         })
-    }
-
-    private fun refreshPosts() {
-        Model.shared.refreshPosts { success ->
-            // This is optional: we could show a loading indicator or error message
-            // but since we're observing LiveData, the UI will update automatically
-        }
     }
 
     private fun filterAndShowPosts(allPosts: List<Post>) {

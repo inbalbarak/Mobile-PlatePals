@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
                     auth.signInWithEmailAndPassword(email, formatterPassword?:"")
                         .addOnCompleteListener(this){task->
                             if(task.isSuccessful){
+                                refreshPosts()
                                 Toast.makeText(this,"authentication finished successfully", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this, HomeActivity::class.java)
                                 startActivity(intent)
@@ -66,6 +67,11 @@ class MainActivity : ComponentActivity() {
 
                 }
             }
+        }
+    }
+
+    private fun refreshPosts() {
+        Model.shared.refreshPosts { success ->
         }
     }
 }

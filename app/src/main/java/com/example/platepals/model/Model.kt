@@ -45,34 +45,58 @@ class Model private constructor() {
     }
 
     fun addPost(post: Post, image: Bitmap?, update: Boolean, callback: BooleanCallback) {
-        val customCallback = { uri: String? ->
-            if (!uri.isNullOrBlank()) {
+        firebaseModel.getUserById(post.author) { user ->
+            if (user != null) {
+                val postWithUsername = post.copy(author = user.username.toString())
 
-                val updatedPost = post.copy(imageUrl = uri)
+                executor.execute {
+                    val existingPost = database.PostDau().getPostById(post.id)
 
-                firebaseModel.addPost(updatedPost,true) { success ->
-                    callback(success)
+                    val finalPost = if (image == null) {
+                        postWithUsername.copy(imageUrl = existingPost?.imageUrl ?: post.imageUrl)
+                    } else {
+                        postWithUsername
+                    }
+
+                    database.PostDau().insertAll(finalPost)
+
+                    mainHandler.post {
+                        firebaseModel.addPost(finalPost, update) { success ->
+                            if (success && image != null) {
+                                uploadImageToCloudinary(
+                                    bitmap = image,
+                                    name = post.id,
+                                    onSuccess = { uri ->
+                                        if (!uri.isNullOrBlank()) {
+                                            val updatedPost = finalPost.copy(imageUrl = uri)
+                                            executor.execute {
+                                                database.PostDau().insertAll(updatedPost)
+                                                mainHandler.post {
+                                                    firebaseModel.addPost(updatedPost, true) { innerSuccess ->
+                                                        callback(innerSuccess)
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            callback(true)
+                                        }
+                                    },
+                                    onError = { callback(true) }
+                                )
+                            } else {
+                                callback(success)
+                            }
+                        }
+                    }
                 }
             } else {
-                callback(false)
-            }
-        }
-
-        firebaseModel.addPost(post, update) { success ->
-            if (success) {
-                image?.let {
-                    uploadImageToCloudinary(
-                        bitmap = image,
-                        name = post.id,
-                        onSuccess = customCallback,
-                        onError = { customCallback(null) }
-                    )
-                } ?: callback(true)
-            } else {
-                callback(false)
+                callback(false) // User not found
             }
         }
     }
+
+
+
 
     fun getAllTags(callback: TagsCallback) {
         firebaseModel.getAllTags(callback)
@@ -83,32 +107,43 @@ class Model private constructor() {
     }
 
     fun refreshPosts(callback: BooleanCallback) {
-        var lastUpdated: Long = Post.lastUpdated
+        val lastUpdated: Long = Post.lastUpdated
 
         firebaseModel.getAllPosts(lastUpdated) { posts ->
-            executor.execute {
-                val latestTime = lastUpdated
+            val authorEmails = posts.map { it.author }.distinct()
 
-                for (post in posts) {
-                    database.PostDau().insertAll(post)
+            firebaseModel.getUsersByEmails(authorEmails) { emailToUsername ->
+                executor.execute {
+                    var latestTime = lastUpdated
 
-                    post.lastUpdated?.let {
-                        if (latestTime < it) {
-                            lastUpdated = it
+                    for (post in posts) {
+                        val postWithUsername = post.copy(author = emailToUsername[post.author] ?: post.author)
+                        database.PostDau().insertAll(postWithUsername)
+
+                        post.lastUpdated?.let {
+                            if (latestTime < it) {
+                                latestTime = it
+                            }
                         }
                     }
-                }
 
-                Post.lastUpdated = lastUpdated
-                mainHandler.post {
-                    callback(true)
+                    Post.lastUpdated = latestTime
+                    mainHandler.post {
+                        callback(true)
+                    }
                 }
             }
         }
     }
 
+
     fun getPostById(id: String, callback: PostCallback) {
-        firebaseModel.getPostById(id, callback)
+        executor.execute {
+            val post = database.PostDau().getPostById(id)
+            mainHandler.post {
+                callback(post)
+            }
+        }
     }
 
     fun getUserByEmail(email: String, callback: UserCallback) {
@@ -144,7 +179,12 @@ class Model private constructor() {
     }
 
     fun deletePostById(postId: String, callback: BooleanCallback) {
-        firebaseModel.deletePostById(postId, callback)
+        executor.execute {
+            database.PostDau().deleteById(postId)
+            mainHandler.post {
+                firebaseModel.deletePostById(postId, callback)
+            }
+        }
     }
 
     fun fetchChatGptResponse(body: ChatGptRequest, callback: (String?) -> Unit) {

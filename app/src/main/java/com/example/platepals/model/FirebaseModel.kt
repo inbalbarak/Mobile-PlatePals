@@ -75,7 +75,7 @@ class FirebaseModel {
         }
     }
 
-    private fun getUsersByEmails(emails: List<String>, callback: UsersByEmailsCallback) {
+     fun getUsersByEmails(emails: List<String>, callback: UsersByEmailsCallback) {
         if (emails.isEmpty()) {
             callback(mapOf())
             return

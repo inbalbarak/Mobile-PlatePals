@@ -30,7 +30,6 @@ class UploadedRecipesFragment : Fragment() {
 
         loadUserInfo()
         observePosts()
-        refreshPosts()
     }
 
     private fun loadUserInfo() {
@@ -39,7 +38,6 @@ class UploadedRecipesFragment : Fragment() {
 
         Model.shared.getUserByEmail(email) { user ->
             userUsername = user?.username
-            // Filter posts immediately if we already have data
             Model.shared.posts.value?.let { posts ->
                 filterAndShowUserPosts(posts)
             }
@@ -50,12 +48,6 @@ class UploadedRecipesFragment : Fragment() {
         Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
             filterAndShowUserPosts(posts)
         })
-    }
-
-    private fun refreshPosts() {
-        Model.shared.refreshPosts { success ->
-            // Posts will be updated through LiveData observation
-        }
     }
 
     private fun filterAndShowUserPosts(allPosts: List<Post>) {
