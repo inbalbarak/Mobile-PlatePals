@@ -25,6 +25,7 @@ class Model private constructor() {
     private val database: AppLocalDbRepository = AppLocalDb.database
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
     val posts: LiveData<List<Post>> = database.PostDau().getAllPosts()
+//    val posts: LiveData<List<Post>> = database.PostDau().getAllPostsWithUsernames()
 
     companion object {
         val shared = Model()
@@ -45,20 +46,18 @@ class Model private constructor() {
     }
 
     fun addPost(post: Post, image: Bitmap?, update: Boolean, callback: BooleanCallback) {
-        firebaseModel.getUserById(post.author) { user ->
-            if (user != null) {
-                val postWithUsername = post.copy(author = user.username.toString())
-
+//        firebaseModel.getUserById(post.author) { user ->
+//            if (user != null) {
                 executor.execute {
                     val existingPost = database.PostDau().getPostById(post.id)
 
                     val finalPost = if (image == null) {
-                        postWithUsername.copy(imageUrl = existingPost?.imageUrl ?: post.imageUrl)
+                        post.copy(imageUrl = existingPost?.imageUrl ?: post.imageUrl)
                     } else {
-                        postWithUsername
+                        post
                     }
 
-                    database.PostDau().insertAll(finalPost)
+                    database.PostDau().insertAll(finalPost) // Save post with email
 
                     mainHandler.post {
                         firebaseModel.addPost(finalPost, update) { success ->
@@ -88,12 +87,13 @@ class Model private constructor() {
                             }
                         }
                     }
-                }
-            } else {
-                callback(false) // User not found
-            }
+//                }
+//            } else {
+//                callback(false) // User not found
+//            }
         }
     }
+
 
 
 

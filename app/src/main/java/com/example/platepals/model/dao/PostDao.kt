@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.example.platepals.model.Post
 import androidx.room.Delete
 import androidx.room.OnConflictStrategy
+import com.example.platepals.model.User
 
 @Dao
 interface PostDao {
@@ -14,7 +15,7 @@ interface PostDao {
     fun create(vararg post: Post)
 
     @Query("SELECT * FROM Post WHERE id=:id")
-    fun getById(id:String):Post
+    fun getById(id: String): Post
 
     @Query("SELECT * FROM Post")
     fun getAllPosts(): LiveData<List<Post>>
@@ -27,4 +28,7 @@ interface PostDao {
 
     @Query("DELETE FROM Post WHERE id = :postId")
     fun deleteById(postId: String)
+
+//    @Query("SELECT p.*, u.username AS author FROM Post p JOIN Users u ON p.author = u.email")
+//    fun getAllPostsWithUsernames(): LiveData<List<Post>>
 }

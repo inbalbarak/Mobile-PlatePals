@@ -141,6 +141,8 @@ class FirebaseModel {
             }
     }
 
+
+
     fun upsertUser(user: User, callback: BooleanCallback) {
         database.collection(Constants.COLLECTIONS.USERS).whereEqualTo("email",user.email).get()
             .addOnSuccessListener { documents ->
