@@ -11,6 +11,7 @@ import com.example.platepals.base.PostsCallback
 import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
+import com.example.platepals.base.UsersCallback
 import com.example.platepals.model.dao.AppLocalDb
 import com.example.platepals.model.dao.AppLocalDbRepository
 import com.example.platepals.networking.ChatGptRequest
@@ -45,11 +46,13 @@ class Model private constructor() {
         )
     }
 
+    fun getAllUsers(callback: UsersCallback){
+        firebaseModel.getAllUsers(callback)
+    }
+
     fun addPost(post: Post, image: Bitmap?, update: Boolean, callback: BooleanCallback) {
-//        firebaseModel.getUserById(post.author) { user ->
-//            if (user != null) {
                 executor.execute {
-                    val existingPost = database.PostDau().getPostById(post.id)
+                    val existingPost = if(update) database.PostDau().getPostById(post.id) else null
 
                     val finalPost = if (image == null) {
                         post.copy(imageUrl = existingPost?.imageUrl ?: post.imageUrl)
@@ -57,7 +60,21 @@ class Model private constructor() {
                         post
                     }
 
-                    database.PostDau().insertAll(finalPost) // Save post with email
+                    val ratingCount = if(post.ratingCount == 0)  existingPost?.ratingCount?.toInt() ?: 0 else post?.ratingCount?.toInt() ?:0
+                    val ratingSum =  if(post.ratingSum == 0)  existingPost?.ratingSum?.toInt() ?: 0 else post?.ratingSum?.toInt() ?:0
+                    val rating = if (ratingCount > 0) {
+                        ratingSum.toDouble() / ratingCount.toDouble()
+                    } else {
+                        0.0
+                    }
+
+                    val postToSave = finalPost.copy(
+                        ratingCount = ratingCount,
+                        ratingSum = ratingSum,
+                        rating = rating
+                    )
+
+                    database.PostDau().insertAll(postToSave) // Save post with email
 
                     mainHandler.post {
                         firebaseModel.addPost(finalPost, update) { success ->
@@ -67,9 +84,23 @@ class Model private constructor() {
                                     name = post.id,
                                     onSuccess = { uri ->
                                         if (!uri.isNullOrBlank()) {
+                                            val ratingCount = if(post.ratingCount == 0)  existingPost?.ratingCount?.toInt() ?: 0 else post?.ratingCount?.toInt() ?:0
+                                            val ratingSum =  if(post.ratingSum == 0)  existingPost?.ratingSum?.toInt() ?: 0 else post?.ratingSum?.toInt() ?:0
+                                            val rating = if (ratingCount > 0) {
+                                                ratingSum.toDouble() / ratingCount.toDouble()
+                                            } else {
+                                                0.0
+                                            }
+
+                                            val postToSave = finalPost.copy(
+                                                ratingCount = ratingCount,
+                                                ratingSum = ratingSum,
+                                                rating = rating
+                                            )
+
                                             val updatedPost = finalPost.copy(imageUrl = uri)
                                             executor.execute {
-                                                database.PostDau().insertAll(updatedPost)
+                                                database.PostDau().insertAll(postToSave.copy(imageUrl = uri))
                                                 mainHandler.post {
                                                     firebaseModel.addPost(updatedPost, true) { innerSuccess ->
                                                         callback(innerSuccess)
@@ -112,13 +143,16 @@ class Model private constructor() {
         firebaseModel.getAllPosts(lastUpdated) { posts ->
             val authorEmails = posts.map { it.author }.distinct()
 
+
             firebaseModel.getUsersByEmails(authorEmails) { emailToUsername ->
                 executor.execute {
                     var latestTime = lastUpdated
 
+                    database.PostDau().deleteAll()
+
                     for (post in posts) {
                         val postWithUsername = post.copy(author = emailToUsername[post.author] ?: post.author)
-                        database.PostDau().insertAll(postWithUsername)
+                        database.PostDau().insertAll(post)
 
                         post.lastUpdated?.let {
                             if (latestTime < it) {
@@ -150,12 +184,17 @@ class Model private constructor() {
         firebaseModel.getUserById(email, callback)
     }
 
+    fun getUserByUsername(username: String, callback: UserCallback) {
+        firebaseModel.getUserByUsername(username, callback)
+    }
+
     fun upsertUser(user: User, image: Bitmap?, callback: BooleanCallback) {
         val customCallback = { uri: String? ->
             if (!uri.isNullOrBlank()) {
                 val updatedUser = user.copy(avatarUrl = uri)
                 firebaseModel.upsertUser(updatedUser) { success ->
-                    callback(success)
+                        callback(success)
+
                 }
             } else {
                 callback(false)

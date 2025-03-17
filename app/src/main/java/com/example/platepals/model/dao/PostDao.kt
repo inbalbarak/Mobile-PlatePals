@@ -29,6 +29,7 @@ interface PostDao {
     @Query("DELETE FROM Post WHERE id = :postId")
     fun deleteById(postId: String)
 
-//    @Query("SELECT p.*, u.username AS author FROM Post p JOIN Users u ON p.author = u.email")
-//    fun getAllPostsWithUsernames(): LiveData<List<Post>>
+
+    @Query("DELETE FROM Post")
+    fun deleteAll()
 }

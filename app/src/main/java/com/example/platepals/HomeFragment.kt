@@ -74,7 +74,15 @@ class HomeFragment : Fragment() {
 
     private fun observePosts() {
         Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
-            filterAndShowPosts(posts)
+            Model.shared.getAllUsers({users->
+                val formattedPosts = posts.map{post->
+                    val user = users.find { it?.email == post.author }
+                    post.copy(author = user?.username ?: post.author)
+                }
+
+                filterAndShowPosts(formattedPosts)
+            })
+
         })
     }
 

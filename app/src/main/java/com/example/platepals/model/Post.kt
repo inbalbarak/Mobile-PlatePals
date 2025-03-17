@@ -21,8 +21,8 @@ data class Post(
     val imageUrl: String ?= "",
     val tags: List<String> ?= emptyList(),
     val rating: Double? = null,
-    val ratingSum:Number?= 0,
-    val ratingCount:Number?=0,
+    val ratingSum:Number?=0,
+    val ratingCount:Number? = 0,
     val ingredients: String,
     val instructions: String,
     val createdAt: Date ?= Date(),
@@ -127,6 +127,7 @@ data class Post(
                 put(TAGS_KEY, tags)
                 put(INGREDIENTS_KEY, ingredients)
                 put(INSTRUCTIONS_KEY, instructions)
+                put(LAST_UPDATED, FieldValue.serverTimestamp())
             }
         }
 }

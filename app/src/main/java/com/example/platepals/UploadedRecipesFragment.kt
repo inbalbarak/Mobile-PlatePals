@@ -39,14 +39,33 @@ class UploadedRecipesFragment : Fragment() {
         Model.shared.getUserByEmail(email) { user ->
             userUsername = user?.username
             Model.shared.posts.value?.let { posts ->
-                filterAndShowUserPosts(posts)
+//                filterAndShowUserPosts(posts)
+                formatPosts(posts)
+
             }
         }
     }
 
+//    private fun observePosts() {
+//        Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
+//            filterAndShowUserPosts(posts)
+//        })
+//    }
+
     private fun observePosts() {
         Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
-            filterAndShowUserPosts(posts)
+            formatPosts(posts)
+        })
+    }
+
+    private fun formatPosts(posts: List<Post>){
+        Model.shared.getAllUsers({users->
+            val formattedPosts = posts.map{post->
+                val user = users.find { it?.email == post.author }
+                post.copy(author = user?.username ?: post.author)
+            }
+
+            filterAndShowUserPosts(formattedPosts)
         })
     }
 

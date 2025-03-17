@@ -37,7 +37,16 @@ class RecipeDetailsFragment : Fragment() {
             rating.text = post?.rating.toString()
             instructionsTextView.text = post?.instructions
             ingredientsTextView.text = post?.ingredients
-            authorName.text = post?.author
+
+//            Model.shared.getAllUsers({users->
+////                val formattedPosts = post.map{post->
+//                    val user = users.find { it?.email == post?.author }
+                authorName.text = post?.author
+//
+////                    post.copy(author = user?.username ?: post.author)
+////                }
+//
+//            })
             creationDate.text = dateFormat.format(post?.createdAt)
 
             post?.imageUrl?.let {
@@ -104,21 +113,25 @@ class RecipeDetailsFragment : Fragment() {
                 ratingCount = newRatingCount,
             )
 
-            Model.shared.addPost(
-                updatedPost, null, true
-            ) { success ->
-                activity?.runOnUiThread {
-                    if (success) {
-                        val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
-                        binding?.rating?.text = newRating.toString()
-                        post = updatedPost
-                        Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
-                        binding?.ratingBar?.rating = 0f
-                    } else {
-                        Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+            Model.shared.getUserByUsername(post?.author ?: ""){user->
+                Model.shared.addPost(
+                    updatedPost.copy(author =  user?.email ?: ""), null, true
+                ) { success ->
+                    activity?.runOnUiThread {
+                        if (success) {
+                            val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
+                            binding?.rating?.text = newRating.toString()
+                            post = updatedPost
+                            Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
+                            binding?.ratingBar?.rating = 0f
+                        } else {
+                            Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
+
+
         }
     }
 
