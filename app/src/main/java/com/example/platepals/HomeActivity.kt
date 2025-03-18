@@ -8,6 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.widget.Toolbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.platepals.model.Model
 
 class HomeActivity : AppCompatActivity() {
     var navController: NavController? = null
@@ -32,11 +34,18 @@ class HomeActivity : AppCompatActivity() {
 
             NavigationUI.setupWithNavController(bottomNavigationView, it)
 
-            bottomNavigationView.setOnItemSelectedListener { item ->
-                // Pop back to the start destination of the graph
-                it.popBackStack(it.graph.startDestinationId ?: 0, false)
+            val swipeRefreshLayout: SwipeRefreshLayout = findViewById(R.id.swiperefresh)
 
-                // Then navigate to the selected item
+            swipeRefreshLayout.setOnRefreshListener {
+                Model.shared.refreshPosts { success->
+                    swipeRefreshLayout.postDelayed({
+                        swipeRefreshLayout.isRefreshing = false
+                    }, 1000)
+                }
+            }
+
+            bottomNavigationView.setOnItemSelectedListener { item ->
+                it.popBackStack(it.graph.startDestinationId ?: 0, false)
                 NavigationUI.onNavDestinationSelected(item, it)
                 true
             }

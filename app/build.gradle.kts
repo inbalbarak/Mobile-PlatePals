@@ -88,5 +88,6 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.picasso)
     implementation(libs.google.gson.v290)
+    implementation(libs.androidx.swiperefreshlayout)
 }
 

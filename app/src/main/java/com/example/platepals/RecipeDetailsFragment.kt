@@ -116,6 +116,7 @@ class RecipeDetailsFragment : Fragment() {
                                 post = updatedPost
                                 Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
                                 binding?.ratingBar?.rating = 0f
+
                             } else {
                                 Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
                             }
