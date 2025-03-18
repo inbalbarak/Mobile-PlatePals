@@ -66,7 +66,7 @@ class ChatbotFragment : Fragment() {
     }
 
     private fun showLoadingMessage() {
-        val loadingMessage = Message(loadingText, "assistant") // Temporary loading message
+        val loadingMessage = Message(loadingText, "assistant")
         messageHistory.add(loadingMessage)
         chatAdapter.addMessage(loadingMessage)
         binding?.chatRecyclerView?.scrollToPosition(chatAdapter.itemCount - 1)
