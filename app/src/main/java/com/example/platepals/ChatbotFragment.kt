@@ -16,6 +16,7 @@ class ChatbotFragment : Fragment() {
     private lateinit var chatAdapter: ChatAdapter
     private var binding: FragmentChatbotBinding? = null
     private val messageHistory = mutableListOf<Message>()
+    private val loadingText = "Thinking..."
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,8 +61,24 @@ class ChatbotFragment : Fragment() {
         chatAdapter.addMessage(userMessage)
         binding?.chatRecyclerView?.scrollToPosition(chatAdapter.itemCount - 1)
 
+        showLoadingMessage()
         fetchChatGptResponse()
     }
+
+    private fun showLoadingMessage() {
+        val loadingMessage = Message(loadingText, "assistant")
+        messageHistory.add(loadingMessage)
+        chatAdapter.addMessage(loadingMessage)
+        binding?.chatRecyclerView?.scrollToPosition(chatAdapter.itemCount - 1)
+    }
+
+    private fun removeLoadingMessage() {
+        if (messageHistory.isNotEmpty() && messageHistory.last().content == loadingText) {
+            messageHistory.removeAt(messageHistory.size -1 )
+            chatAdapter.removeLastMessage()
+        }
+    }
+
 
     private fun fetchChatGptResponse() {
         val request = ChatGptRequest(
@@ -71,6 +88,7 @@ class ChatbotFragment : Fragment() {
         Model.shared.fetchChatGptResponse(request) { response ->
             activity?.runOnUiThread {
                 if(response != null) {
+                    removeLoadingMessage()
                     addBotMessage(response)
                 }
             }
