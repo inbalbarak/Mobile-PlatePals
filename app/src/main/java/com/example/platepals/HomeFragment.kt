@@ -44,7 +44,6 @@ class HomeFragment : Fragment() {
         topButton.setOnClickListener {
             selectedSort = R.id.topButton
             selectSort(view)
-//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
             filterAndShowPosts(allPosts ?: listOf())
 
         }
@@ -52,7 +51,6 @@ class HomeFragment : Fragment() {
         newButton.setOnClickListener {
             selectedSort = R.id.newButton
             selectSort(view)
-//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
             filterAndShowPosts(allPosts ?: listOf())
 
         }
@@ -163,7 +161,6 @@ class HomeFragment : Fragment() {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
             }
-//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
             filterAndShowPosts(allPosts ?: listOf())
 
         }

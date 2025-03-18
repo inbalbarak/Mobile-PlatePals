@@ -39,18 +39,10 @@ class UploadedRecipesFragment : Fragment() {
         Model.shared.getUserByEmail(email) { user ->
             userUsername = user?.username
             Model.shared.posts.value?.let { posts ->
-//                filterAndShowUserPosts(posts)
                 formatPosts(posts)
-
             }
         }
     }
-
-//    private fun observePosts() {
-//        Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
-//            filterAndShowUserPosts(posts)
-//        })
-//    }
 
     private fun observePosts() {
         Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->

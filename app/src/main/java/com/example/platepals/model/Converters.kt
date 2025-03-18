@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken
 import java.util.Date
 
 class Converters {
-    // List<String> converters
     @TypeConverter
     fun fromStringList(value: List<String>?): String {
         return Gson().toJson(value ?: emptyList<String>())

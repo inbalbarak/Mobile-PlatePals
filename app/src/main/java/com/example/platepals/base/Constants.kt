@@ -13,8 +13,6 @@ typealias PostCallback = (Post?) -> Unit
 typealias BooleanCallback = (Boolean) -> Unit
 typealias UsersByEmailsCallback = (Map<String, String>) -> Unit
 typealias UserCallback = (User?)-> Unit
-//typealias UsersCallback = (List<User>)-> Unit
-
 typealias UsersCallback = (List<User>) -> Unit
 
 typealias LivePostsCallback = (LiveData<List<Post>>) -> Unit

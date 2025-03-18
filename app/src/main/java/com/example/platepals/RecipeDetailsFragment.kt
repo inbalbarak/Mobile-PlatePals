@@ -37,16 +37,7 @@ class RecipeDetailsFragment : Fragment() {
             rating.text = post?.rating.toString()
             instructionsTextView.text = post?.instructions
             ingredientsTextView.text = post?.ingredients
-
-//            Model.shared.getAllUsers({users->
-////                val formattedPosts = post.map{post->
-//                    val user = users.find { it?.email == post?.author }
-                authorName.text = post?.author
-//
-////                    post.copy(author = user?.username ?: post.author)
-////                }
-//
-//            })
+            authorName.text = post?.author
             creationDate.text = dateFormat.format(post?.createdAt)
 
             post?.imageUrl?.let {
