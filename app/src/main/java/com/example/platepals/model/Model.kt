@@ -121,10 +121,10 @@ class Model private constructor() {
         }
     }
 
-    fun getAllTags(getAll: Boolean, callback: TagsCallback) {
+    fun getAllTags(refresh: Boolean, callback: TagsCallback) {
         val lastUpdated: Long = Tag.lastUpdated
 
-        val since = if (getAll) 0 else lastUpdated
+        val since = if (refresh) 0 else lastUpdated
 
         firebaseModel.getAllTags(since) { tags ->
             executor.execute {
@@ -158,10 +158,10 @@ class Model private constructor() {
         }
     }
 
-    fun refreshPosts(getAll: Boolean, callback: BooleanCallback) {
+    fun refreshPosts(refresh: Boolean, callback: BooleanCallback) {
         val lastUpdated: Long = Post.lastUpdated
 
-        val since = if (getAll) 0 else lastUpdated
+        val since = if (refresh) 0 else lastUpdated
 
         firebaseModel.getAllPosts(since) { posts ->
             val authorEmails = posts.map { it.author }.distinct()
