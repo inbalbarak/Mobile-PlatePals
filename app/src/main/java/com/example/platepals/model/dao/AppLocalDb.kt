@@ -14,8 +14,8 @@ import com.example.platepals.model.User
 @TypeConverters(Converters::class)
 abstract class AppLocalDbRepository: RoomDatabase(){
     abstract fun UserDao(): UserDao
-    abstract fun TagDau(): TagDao
-    abstract fun PostDau(): PostDao
+    abstract fun TagDao(): TagDao
+    abstract fun PostDao(): PostDao
 
 }
 

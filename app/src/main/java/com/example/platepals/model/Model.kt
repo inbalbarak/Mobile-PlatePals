@@ -26,7 +26,7 @@ class Model private constructor() {
 
     private val database: AppLocalDbRepository = AppLocalDb.database
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
-    val posts: LiveData<List<Post>> = database.PostDau().getAllPosts()
+    val posts: LiveData<List<Post>> = database.PostDao().getAllPosts()
 
     companion object {
         val shared = Model()
@@ -52,7 +52,7 @@ class Model private constructor() {
 
     fun addPost(post: Post, image: Bitmap?, update: Boolean, callback: BooleanCallback) {
                 executor.execute {
-                    val existingPost = if(update) database.PostDau().getPostById(post.id) else null
+                    val existingPost = if(update) database.PostDao().getPostById(post.id) else null
 
                     val finalPost = if (image == null) {
                         post.copy(imageUrl = existingPost?.imageUrl ?: post.imageUrl)
@@ -74,7 +74,7 @@ class Model private constructor() {
                         rating = rating
                     )
 
-                    database.PostDau().insertAll(postToSave)
+                    database.PostDao().insertAll(postToSave)
 
                     mainHandler.post {
                         firebaseModel.addPost(finalPost, update) { success ->
@@ -100,7 +100,7 @@ class Model private constructor() {
 
                                             val updatedPost = finalPost.copy(imageUrl = uri)
                                             executor.execute {
-                                                database.PostDau().insertAll(postToSave.copy(imageUrl = uri))
+                                                database.PostDao().insertAll(postToSave.copy(imageUrl = uri))
                                                 mainHandler.post {
                                                     firebaseModel.addPost(updatedPost, true) { innerSuccess ->
                                                         callback(innerSuccess)
@@ -144,10 +144,10 @@ class Model private constructor() {
                 executor.execute {
                     var latestTime = lastUpdated
 
-                    database.PostDau().deleteAll()
+                    database.PostDao().deleteAll()
 
                     for (post in posts) {
-                        database.PostDau().insertAll(post)
+                        database.PostDao().insertAll(post)
 
                         post.lastUpdated?.let {
                             if (latestTime < it) {
@@ -168,7 +168,7 @@ class Model private constructor() {
 
     fun getPostById(id: String, callback: PostCallback) {
         executor.execute {
-            val post = database.PostDau().getPostById(id)
+            val post = database.PostDao().getPostById(id)
             mainHandler.post {
                 callback(post)
             }
@@ -214,7 +214,7 @@ class Model private constructor() {
 
     fun deletePostById(postId: String, callback: BooleanCallback) {
         executor.execute {
-            database.PostDau().deleteById(postId)
+            database.PostDao().deleteById(postId)
             mainHandler.post {
                 firebaseModel.deletePostById(postId, callback)
             }
