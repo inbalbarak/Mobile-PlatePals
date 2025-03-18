@@ -1,5 +1,4 @@
 package com.example.platepals.model
-import android.util.Log
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
 import com.example.platepals.base.PostCallback
@@ -116,7 +115,6 @@ class FirebaseModel {
                     getUsersByEmails(authorEmails) { emailToUsername ->
                         val posts = postsSnapshot.map { json ->
                             Post.fromJSON(json.data).let { post ->
-//                                post.copy(author = emailToUsername[post.author] ?: post.author)
                                 post.copy(author =  post.author)
 
                             }
