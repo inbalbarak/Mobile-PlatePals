@@ -37,7 +37,7 @@ class HomeActivity : AppCompatActivity() {
             val swipeRefreshLayout: SwipeRefreshLayout = findViewById(R.id.swiperefresh)
 
             swipeRefreshLayout.setOnRefreshListener {
-                Model.shared.refreshPosts { success->
+                Model.shared.refreshPosts(true) { success->
                     swipeRefreshLayout.postDelayed({
                         swipeRefreshLayout.isRefreshing = false
                     }, 1000)
