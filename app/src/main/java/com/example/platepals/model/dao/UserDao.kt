@@ -10,6 +10,10 @@ interface UserDao {
     @Insert
     fun create(vararg user: User)
 
-    @Query("SELECT * FROM User WHERE email=:email")
+    @Query("SELECT * FROM Users WHERE email=:email")
     fun getByEmail(email:String): User
+
+    @Query("SELECT * FROM Users")
+    fun getAll(): List<User>
+
 }

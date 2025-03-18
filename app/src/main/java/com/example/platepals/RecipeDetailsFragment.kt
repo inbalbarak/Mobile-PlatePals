@@ -93,29 +93,33 @@ class RecipeDetailsFragment : Fragment() {
 
     private fun submitRating(value: Int) {
         post?.let {
-            val currentRatingSum = it.ratingSum?.toInt() ?: 0
-            val currentRatingCount = it.ratingCount?.toInt() ?: 0
+            if(value != 0){
+                val currentRatingSum = it.ratingSum?.toInt() ?: 0
+                val currentRatingCount = it.ratingCount?.toInt() ?: 0
 
-            val newRatingSum = currentRatingSum + value
-            val newRatingCount = currentRatingCount + 1
+                val newRatingSum = currentRatingSum + value
+                val newRatingCount = currentRatingCount + 1
 
-            val updatedPost = it.copy(
-                ratingSum = newRatingSum,
-                ratingCount = newRatingCount,
-            )
+                val updatedPost = it.copy(
+                    ratingSum = newRatingSum,
+                    ratingCount = newRatingCount,
+                )
 
-            Model.shared.addPost(
-                updatedPost, null, true
-            ) { success ->
-                activity?.runOnUiThread {
-                    if (success) {
-                        val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
-                        binding?.rating?.text = newRating.toString()
-                        post = updatedPost
-                        Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
-                        binding?.ratingBar?.rating = 0f
-                    } else {
-                        Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+                Model.shared.getUserByUsername(post?.author ?: ""){user->
+                    Model.shared.addPost(
+                        updatedPost.copy(author =  user?.email ?: ""), null, true
+                    ) { success ->
+                        activity?.runOnUiThread {
+                            if (success) {
+                                val newRating = BigDecimal(newRatingSum.toDouble() / newRatingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
+                                binding?.rating?.text = newRating.toString()
+                                post = updatedPost
+                                Toast.makeText(context, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
+                                binding?.ratingBar?.rating = 0f
+                            } else {
+                                Toast.makeText(context, "Failed to submit rating - Please try again", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             }

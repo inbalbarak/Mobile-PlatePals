@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.platepals.model.Model
 import com.example.platepals.model.Post
 import com.google.firebase.Firebase
@@ -22,6 +23,7 @@ class HomeFragment : Fragment() {
     private val selectedTagIds = mutableSetOf<String>()
     private var selectedSort = R.id.topButton
     private val tagViews = mutableListOf<TextView>()
+    private var allPosts : List<Post>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,9 +34,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observePosts()
         loadTags(view)
         selectSort(view)
-        loadFilteredPosts()
 
         val topButton: Button = view.findViewById(R.id.topButton)
         val newButton: Button = view.findViewById(R.id.newButton)
@@ -42,13 +44,15 @@ class HomeFragment : Fragment() {
         topButton.setOnClickListener {
             selectedSort = R.id.topButton
             selectSort(view)
-            loadFilteredPosts()
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
 
         newButton.setOnClickListener {
             selectedSort = R.id.newButton
             selectSort(view)
-            loadFilteredPosts()
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
 
         val auth = Firebase.auth
@@ -71,26 +75,37 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadFilteredPosts() {
-        Model.shared.getAllPosts { allPosts ->
-            activity?.runOnUiThread {
-                var filteredPosts = allPosts.filter { post ->
-                    selectedTagIds.isEmpty() || post.tags.any { tag -> selectedTagIds.contains(tag) }
+    private fun observePosts() {
+        Model.shared.posts.observe(viewLifecycleOwner, Observer { posts ->
+            Model.shared.getAllUsers({users->
+                val formattedPosts = posts.map{post->
+                    val user = users.find { it?.email == post.author }
+                    post.copy(author = user?.username ?: post.author)
                 }
 
-                filteredPosts = if (selectedSort == R.id.newButton) {
-                    filteredPosts.sortedByDescending { it.createdAt }
-                } else {
-                    filteredPosts.sortedByDescending { it.rating }
-                }
+                filterAndShowPosts(formattedPosts)
+                allPosts = formattedPosts
+            })
 
-                showPostsFragment(filteredPosts)
-            }
+        })
+    }
+
+    private fun filterAndShowPosts(allPosts: List<Post>) {
+        var filteredPosts = allPosts.filter { post ->
+            selectedTagIds.isEmpty() || post.tags?.any { tag -> selectedTagIds.contains(tag) } == true
         }
+
+        filteredPosts = if (selectedSort == R.id.newButton) {
+            filteredPosts.sortedByDescending { it.createdAt }
+        } else {
+            filteredPosts.sortedByDescending { it.rating }
+        }
+
+        showPostsFragment(filteredPosts)
     }
 
     private fun showPostsFragment(posts: List<Post>) {
-        val fragment = PostsListFragment.newInstance(posts,false)
+        val fragment = PostsListFragment.newInstance(posts, false)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
             .commit()
@@ -146,7 +161,8 @@ class HomeFragment : Fragment() {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
             }
-            loadFilteredPosts()
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
         return tagView
     }

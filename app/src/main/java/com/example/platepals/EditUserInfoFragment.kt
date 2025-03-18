@@ -86,12 +86,16 @@ class EditUserInfoFragment : Fragment() {
 
                     Model.shared.upsertUser(updatedUser, image = image) { success ->
                         if (success) {
-                            parentFragmentManager.popBackStack()
 
-                            val parentFragment = parentFragment
-                            if (parentFragment is PersonalInfoFragment) {
-                                parentFragment.refreshUserData()
+                            Model.shared.refreshPosts { success->
+                                parentFragmentManager.popBackStack()
+
+                                val parentFragment = parentFragment
+                                if (parentFragment is PersonalInfoFragment) {
+                                    parentFragment.refreshUserData()
+                                }
                             }
+
                         } else {
                             Toast.makeText(
                                 requireContext(),
