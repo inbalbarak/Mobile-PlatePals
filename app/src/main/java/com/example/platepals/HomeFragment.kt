@@ -23,6 +23,7 @@ class HomeFragment : Fragment() {
     private val selectedTagIds = mutableSetOf<String>()
     private var selectedSort = R.id.topButton
     private val tagViews = mutableListOf<TextView>()
+    private var allPosts : List<Post>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -33,9 +34,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observePosts()
         loadTags(view)
         selectSort(view)
-        observePosts()
 
         val topButton: Button = view.findViewById(R.id.topButton)
         val newButton: Button = view.findViewById(R.id.newButton)
@@ -43,13 +44,17 @@ class HomeFragment : Fragment() {
         topButton.setOnClickListener {
             selectedSort = R.id.topButton
             selectSort(view)
-            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
 
         newButton.setOnClickListener {
             selectedSort = R.id.newButton
             selectSort(view)
-            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
 
         val auth = Firebase.auth
@@ -81,6 +86,7 @@ class HomeFragment : Fragment() {
                 }
 
                 filterAndShowPosts(formattedPosts)
+                allPosts = formattedPosts
             })
 
         })
@@ -157,7 +163,9 @@ class HomeFragment : Fragment() {
                 tagView.setBackgroundResource(R.drawable.orange_filled_rounded_text_field)
                 tagView.setTextColor(Color.WHITE)
             }
-            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+//            filterAndShowPosts(Model.shared.posts.value ?: listOf())
+            filterAndShowPosts(allPosts ?: listOf())
+
         }
         return tagView
     }

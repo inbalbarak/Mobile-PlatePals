@@ -41,19 +41,25 @@ class FirebaseModel {
     }
 
     fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
-        database.collection(Constants.COLLECTIONS.TAGS).whereIn("id", ids).get()
-            .addOnCompleteListener {
-                when (it.isSuccessful) {
-                    true -> {
-                        val tags: MutableList<Tag> = mutableListOf()
-                        for (json in it.result) {
-                            tags.add(Tag.fromJSON(json.data))
+        if(ids.isEmpty()){
+            callback(listOf())
+
+        }else{
+            database.collection(Constants.COLLECTIONS.TAGS).whereIn("id", ids).get()
+                .addOnCompleteListener {
+                    when (it.isSuccessful) {
+                        true -> {
+                            val tags: MutableList<Tag> = mutableListOf()
+                            for (json in it.result) {
+                                tags.add(Tag.fromJSON(json.data))
+                            }
+                            callback(tags)
                         }
-                        callback(tags)
+                        false -> callback(listOf())
                     }
-                    false -> callback(listOf())
                 }
-            }
+        }
+
     }
 
 
