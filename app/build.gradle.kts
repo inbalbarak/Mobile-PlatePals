@@ -87,5 +87,6 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.converter.gson)
     implementation(libs.picasso)
+    implementation(libs.google.gson.v290)
 }
 

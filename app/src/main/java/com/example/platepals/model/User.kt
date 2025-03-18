@@ -3,7 +3,7 @@ package com.example.platepals.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "Users")
 data class User (
     @PrimaryKey
     val email: String,
