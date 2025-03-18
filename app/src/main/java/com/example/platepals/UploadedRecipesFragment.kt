@@ -62,12 +62,10 @@ class UploadedRecipesFragment : Fragment() {
     }
 
     private fun filterAndShowUserPosts(allPosts: List<Post>) {
-        if (userUsername != null) {
             val filteredPosts = allPosts.filter { post ->
                 post.author == userUsername
             }
             showPostsFragment(filteredPosts)
-        }
     }
 
     private fun showPostsFragment(posts: List<Post>) {
