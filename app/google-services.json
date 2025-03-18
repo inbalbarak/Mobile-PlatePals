@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "24759955681",
+    "project_id": "mobileplatepals",
+    "storage_bucket": "mobileplatepals.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24759955681:android:ba01e2bf5c51311df587a0",
+        "android_client_info": {
+          "package_name": "com.example.platepals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYf4mI8ct97gs8xprH5l-ojzUDHx7U7dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

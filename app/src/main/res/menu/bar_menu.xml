@@ -1,0 +1,30 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/chatbotFragment"
+        android:icon="@drawable/bot_icon"
+        android:title=""/>
+
+    <item
+        android:id="@+id/myRecipesFragment"
+        android:icon="@drawable/my_recipes_icon"
+        android:title=""/>
+
+    <item
+        android:id="@+id/createPostFragment"
+        android:icon="@drawable/add_icon"
+        android:title=""
+        />
+
+    <item
+        android:id="@+id/personalInfoFragment"
+        android:icon="@drawable/baseline_perm_identity_24"
+        android:title=""
+        />
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home_icon"
+        android:title=""/>
+</menu>
