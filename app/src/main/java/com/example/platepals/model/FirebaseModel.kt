@@ -1,14 +1,12 @@
 package com.example.platepals.model
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.Constants
-import com.example.platepals.base.PostCallback
 import com.example.platepals.base.PostsCallback
-import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
 import com.example.platepals.base.UsersByEmailsCallback
-import com.example.platepals.base.UsersCallback
 import com.example.platepals.utils.extentions.toFirebaseTimestamp
+import com.example.platepals.base.UsersCallback
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
@@ -23,8 +21,10 @@ class FirebaseModel {
         database.firestoreSettings = setting
     }
 
-    fun getAllTags(callback: TagsCallback) {
-        database.collection(Constants.COLLECTIONS.TAGS).get()
+    fun getAllTags(sinceLastUpdated: Long, callback: TagsCallback) {
+        database.collection(Constants.COLLECTIONS.TAGS)
+            .whereGreaterThanOrEqualTo(Tag.LAST_UPDATED, sinceLastUpdated.toFirebaseTimestamp)
+            .get()
             .addOnCompleteListener {
                 when (it.isSuccessful) {
                     true -> {
@@ -38,29 +38,6 @@ class FirebaseModel {
                 }
             }
     }
-
-    fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
-        if(ids.isEmpty()){
-            callback(listOf())
-
-        }else{
-            database.collection(Constants.COLLECTIONS.TAGS).whereIn("id", ids).get()
-                .addOnCompleteListener {
-                    when (it.isSuccessful) {
-                        true -> {
-                            val tags: MutableList<Tag> = mutableListOf()
-                            for (json in it.result) {
-                                tags.add(Tag.fromJSON(json.data))
-                            }
-                            callback(tags)
-                        }
-                        false -> callback(listOf())
-                    }
-                }
-        }
-
-    }
-
 
     fun addPost(post: Post, update: Boolean, callback: BooleanCallback) {
         if(update){
@@ -124,17 +101,6 @@ class FirebaseModel {
                 }
             }
             .addOnFailureListener { callback(listOf()) }
-    }
-
-    fun getPostById(postId: String, callback: PostCallback) {
-        database.collection(Constants.COLLECTIONS.POSTS).whereEqualTo("id",postId).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val post :Post = Post.fromJSON(document.data ?: mapOf())
-                    callback(post)
-
-                }
-            }
     }
 
     fun getUserById(email: String, callback: UserCallback) {

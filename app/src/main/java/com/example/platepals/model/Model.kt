@@ -124,22 +124,49 @@ class Model private constructor() {
         }
     }
 
+    fun getAllTags(refresh: Boolean, callback: TagsCallback) {
+        val lastUpdated: Long = Tag.lastUpdated
 
+        val since = if (refresh) 0 else lastUpdated
 
+        firebaseModel.getAllTags(since) { tags ->
+            executor.execute {
+                var currentTime = lastUpdated
+                for (tag in tags) {
+                    database.TagDao().insertAll(tag)
+                    tag.lastUpdated?.let {
+                        if (currentTime < it) {
+                            currentTime = it
+                        }
+                    }
+                }
 
+                Tag.lastUpdated = currentTime
+                val savedTags = database.TagDao().getAllTags()
 
-    fun getAllTags(callback: TagsCallback) {
-        firebaseModel.getAllTags(callback)
+                mainHandler.post {
+                    callback(savedTags)
+                }
+            }
+        }
     }
 
     fun getTagsByIds(ids: List<String>, callback: TagsByIdsCallback) {
-        firebaseModel.getTagsByIds(ids, callback)
+        executor.execute {
+            val tagsByIds = database.TagDao().getTagsByIds(ids)
+
+            mainHandler.post {
+                callback(tagsByIds)
+            }
+        }
     }
 
-    fun refreshPosts(callback: BooleanCallback) {
+    fun refreshPosts(refresh: Boolean, callback: BooleanCallback) {
         val lastUpdated: Long = Post.lastUpdated
 
-        firebaseModel.getAllPosts(0) { posts ->
+        val since = if (refresh) 0 else lastUpdated
+
+        firebaseModel.getAllPosts(since) { posts ->
             val authorEmails = posts.map { it.author }.distinct()
 
 

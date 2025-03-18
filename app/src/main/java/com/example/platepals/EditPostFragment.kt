@@ -212,7 +212,7 @@ class EditPostFragment : Fragment() {
         val flow = view?.findViewById<Flow>(R.id.tagsFlow)
         val mainLayout = view?.findViewById<ConstraintLayout>(R.id.main)
 
-        Model.shared.getAllTags { tags ->
+        Model.shared.getAllTags(false) { tags ->
             activity?.runOnUiThread {
                 val tagIds = mutableListOf<Int>()
 

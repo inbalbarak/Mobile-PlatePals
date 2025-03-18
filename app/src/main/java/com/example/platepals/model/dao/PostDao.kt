@@ -5,9 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.platepals.model.Post
-import androidx.room.Delete
 import androidx.room.OnConflictStrategy
-import com.example.platepals.model.User
 
 @Dao
 interface PostDao {

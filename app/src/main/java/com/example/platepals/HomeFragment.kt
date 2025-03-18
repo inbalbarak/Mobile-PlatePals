@@ -2,7 +2,6 @@ package com.example.platepals
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,7 +114,7 @@ class HomeFragment : Fragment() {
         val flow = view.findViewById<androidx.constraintlayout.helper.widget.Flow>(R.id.tagsFlow)
         val mainLayout = view.findViewById<ConstraintLayout>(R.id.main)
 
-        Model.shared.getAllTags { tags ->
+        Model.shared.getAllTags(false) { tags ->
             activity?.runOnUiThread {
                 val tagIds = mutableListOf<Int>()
 
