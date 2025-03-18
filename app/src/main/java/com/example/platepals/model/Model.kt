@@ -17,6 +17,7 @@ import com.example.platepals.networking.ChatGptRequest
 import com.example.platepals.networking.ChatgptClient
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Date
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -71,7 +72,8 @@ class Model private constructor() {
                     val postToSave = finalPost.copy(
                         ratingCount = ratingCount,
                         ratingSum = ratingSum,
-                        rating = rating
+                        rating = rating,
+                        createdAt = if(existingPost != null) existingPost.createdAt else Date()
                     )
 
                     database.PostDao().insertAll(postToSave)
@@ -95,7 +97,8 @@ class Model private constructor() {
                                             val postToSave = finalPost.copy(
                                                 ratingCount = ratingCount,
                                                 ratingSum = ratingSum,
-                                                rating = rating
+                                                rating = rating,
+                                                createdAt = if(existingPost != null) existingPost.createdAt else Date()
                                             )
 
                                             val updatedPost = finalPost.copy(imageUrl = uri)
