@@ -15,6 +15,8 @@ import com.example.platepals.model.dao.AppLocalDb
 import com.example.platepals.model.dao.AppLocalDbRepository
 import com.example.platepals.networking.ChatGptRequest
 import com.example.platepals.networking.ChatgptClient
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.concurrent.Executors
 
 class Model private constructor() {
@@ -61,7 +63,7 @@ class Model private constructor() {
                     val ratingCount = if(post.ratingCount == 0)  existingPost?.ratingCount?.toInt() ?: 0 else post?.ratingCount?.toInt() ?:0
                     val ratingSum =  if(post.ratingSum == 0)  existingPost?.ratingSum?.toInt() ?: 0 else post?.ratingSum?.toInt() ?:0
                     val rating = if (ratingCount > 0) {
-                        ratingSum.toDouble() / ratingCount.toDouble()
+                        BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
                     } else {
                         0.0
                     }
@@ -85,7 +87,7 @@ class Model private constructor() {
                                             val ratingCount = if(post.ratingCount == 0)  existingPost?.ratingCount?.toInt() ?: 0 else post?.ratingCount?.toInt() ?:0
                                             val ratingSum =  if(post.ratingSum == 0)  existingPost?.ratingSum?.toInt() ?: 0 else post?.ratingSum?.toInt() ?:0
                                             val rating = if (ratingCount > 0) {
-                                                ratingSum.toDouble() / ratingCount.toDouble()
+                                                BigDecimal(ratingSum.toDouble() / ratingCount.toDouble()).setScale(2, RoundingMode.HALF_UP).toDouble()
                                             } else {
                                                 0.0
                                             }
