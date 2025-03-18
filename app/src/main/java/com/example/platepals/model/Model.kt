@@ -7,7 +7,6 @@ import androidx.core.os.HandlerCompat
 import androidx.lifecycle.LiveData
 import com.example.platepals.base.BooleanCallback
 import com.example.platepals.base.PostCallback
-import com.example.platepals.base.PostsCallback
 import com.example.platepals.base.TagsByIdsCallback
 import com.example.platepals.base.TagsCallback
 import com.example.platepals.base.UserCallback
@@ -26,7 +25,6 @@ class Model private constructor() {
     private val database: AppLocalDbRepository = AppLocalDb.database
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
     val posts: LiveData<List<Post>> = database.PostDau().getAllPosts()
-//    val posts: LiveData<List<Post>> = database.PostDau().getAllPostsWithUsernames()
 
     companion object {
         val shared = Model()
@@ -74,7 +72,7 @@ class Model private constructor() {
                         rating = rating
                     )
 
-                    database.PostDau().insertAll(postToSave) // Save post with email
+                    database.PostDau().insertAll(postToSave)
 
                     mainHandler.post {
                         firebaseModel.addPost(finalPost, update) { success ->
@@ -118,10 +116,6 @@ class Model private constructor() {
                             }
                         }
                     }
-//                }
-//            } else {
-//                callback(false) // User not found
-//            }
         }
     }
 
@@ -140,7 +134,7 @@ class Model private constructor() {
     fun refreshPosts(callback: BooleanCallback) {
         val lastUpdated: Long = Post.lastUpdated
 
-        firebaseModel.getAllPosts(lastUpdated) { posts ->
+        firebaseModel.getAllPosts(0) { posts ->
             val authorEmails = posts.map { it.author }.distinct()
 
 
@@ -151,7 +145,6 @@ class Model private constructor() {
                     database.PostDau().deleteAll()
 
                     for (post in posts) {
-                        val postWithUsername = post.copy(author = emailToUsername[post.author] ?: post.author)
                         database.PostDau().insertAll(post)
 
                         post.lastUpdated?.let {
