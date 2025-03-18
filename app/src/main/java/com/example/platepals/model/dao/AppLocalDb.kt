@@ -10,13 +10,12 @@ import com.example.platepals.model.Post
 import com.example.platepals.model.Tag
 import com.example.platepals.model.User
 
-@Database(entities = [User::class, Tag:: class, Post::class ], version = 4)
+@Database(entities = [User::class, Tag:: class, Post::class ], version = 5)
 @TypeConverters(Converters::class)
 abstract class AppLocalDbRepository: RoomDatabase(){
     abstract fun UserDao(): UserDao
     abstract fun TagDao(): TagDao
     abstract fun PostDao(): PostDao
-
 }
 
 object AppLocalDb{

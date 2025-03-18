@@ -87,7 +87,7 @@ class EditUserInfoFragment : Fragment() {
                     Model.shared.upsertUser(updatedUser, image = image) { success ->
                         if (success) {
 
-                            Model.shared.refreshPosts { success->
+                            Model.shared.refreshPosts(false) { success->
                                 parentFragmentManager.popBackStack()
 
                                 val parentFragment = parentFragment
